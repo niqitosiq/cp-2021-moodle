@@ -47,4 +47,7 @@
 			box-sizing: border-box;
 		}
 	}
+	.wrapper {
+		position: relative;
+	}
 </style>

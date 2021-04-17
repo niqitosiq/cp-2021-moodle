@@ -1,5 +1,5 @@
 <script>
-	import Button from "./ui/Button.svelte";
+	import { onMount } from "svelte";
 
 	function rollDice() {
 		const dice = [...document.querySelectorAll(".die-list")];
@@ -13,6 +13,10 @@
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
+
+	onMount(() => {
+		rollDice();
+	});
 </script>
 
 <div class="dice">
@@ -51,8 +55,6 @@
 			<span class="dot" />
 		</li>
 	</ol>
-
-	<Button on:click={rollDice}>Вращать</Button>
 </div>
 
 <style lang="scss">
@@ -79,7 +81,7 @@
 		width: 6rem;
 	}
 	.roll {
-		transition: transform 5s ease;
+		transition: transform 2s cubic-bezier(0.85, 1.09, 0.89, 1.01);
 	}
 	.die-item {
 		background-color: #4055f6;

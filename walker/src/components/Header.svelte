@@ -45,6 +45,8 @@
 		border-radius: 65px;
 		padding: 20px 40px;
 		box-sizing: content-box;
+		z-index: 20;
+		position: relative;
 	}
 	.items {
 		display: flex;

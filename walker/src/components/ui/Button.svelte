@@ -17,6 +17,7 @@
 		font-size: 10px;
 		line-height: 12px;
 		text-transform: uppercase;
+		font-weight: bold;
 		color: #ffffff;
 		outline: none;
 		border-radius: 17px;
