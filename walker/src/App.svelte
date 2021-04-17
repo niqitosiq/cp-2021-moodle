@@ -4,6 +4,7 @@
 	import { fade } from "svelte/transition";
 
 	export let user;
+	export let tries;
 
 	let active = "map";
 
@@ -34,7 +35,7 @@
 			in:fade={{ delay: 210, duration: 200 }}
 			out:fade={{ delay: 0, duration: 200 }}
 		>
-			<svelte:component this={activeView} />
+			<svelte:component this={activeView} {tries} {user} />
 		</div>
 	{/key}
 </main>

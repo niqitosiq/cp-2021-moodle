@@ -5,18 +5,25 @@
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
 	import Roll from "../roll/Roll.svelte";
+	import axios from "axios";
 
 	export let activePosition = 0;
+	export let tries = 0;
+	export let user;
 
 	let isRolled = false;
 	let roulette = false;
 	let loaded = false;
+	let rollTries;
 
 	function rollDice() {
+		rollTries--;
+		localStorage.setItem("rolled", rollTries);
 		if (!isRolled)
 			setTimeout(() => {
 				isRolled = false;
 				const rolled = points[activePosition];
+
 				gsap.to("#user", {
 					x: rolled.x,
 					y: rolled.y,
@@ -26,11 +33,16 @@
 					y: -rolled.y,
 					duration: 4,
 				});
+
 				if (rolled.type === "prize") {
 					setTimeout(() => {
 						roulette = true;
 					}, 2500);
 				}
+
+				axios.get(
+					`/my/backend/walker.save.php?id=${user}&pos=${activePosition}`
+				);
 			}, 3000);
 		isRolled = true;
 	}
@@ -45,39 +57,44 @@
 		{ x: 920, y: 820, type: "empty" },
 	];
 
-	onMount(() => {
-		setTimeout(() => {
-			loaded = true;
+	onMount(async () => {
+		const rolled = localStorage.getItem("rolled") || 0;
+		rollTries = tries - rolled;
 
-			const tl = gsap.timeline();
-			tl.to(
+		const { data } = await axios.get(
+			`http://localhost:8000/my/backend/walker.get.php?id=${user}`
+		);
+		activePosition = data.pos;
+
+		loaded = true;
+
+		const tl = gsap.timeline();
+		tl.to(
+			"#map",
+			{
+				x: -880,
+				y: -120,
+				duration: 5,
+			},
+			"-=2"
+		)
+			.to(
 				"#map",
 				{
-					x: -880,
-					y: -120,
+					x: 460,
+					y: -470,
 					duration: 5,
 				},
 				"-=2"
 			)
-				.to(
-					"#map",
-					{
-						x: 460,
-						y: -470,
-						duration: 5,
-					},
-					"-=2"
-				)
-				.to("#map", { scale: 1.2, duration: 9, ease: "power2.out" }, "-=6");
+			.to("#map", { scale: 1.2, duration: 9, ease: "power2.out" }, "-=6");
 
-			gsap.to("#user", {
-				x: points[activePosition].x,
-				y: points[activePosition].y,
-				duration: 1,
-			});
-		}, 500);
+		gsap.to("#user", {
+			x: points[activePosition].x,
+			y: points[activePosition].y,
+			duration: 1,
+		});
 	});
-	window.addEventListener("load", () => {});
 </script>
 
 <div class="map-section">
@@ -107,7 +124,9 @@
 			</div>
 		</div>
 
-		<Button on:click={rollDice}>Бросить кубик</Button>
+		<Button on:click={rollDice} disabled={rollTries <= 0}>
+			Бросить кубик ({rollTries})
+		</Button>
 	</div>
 </div>
 

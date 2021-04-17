@@ -32,7 +32,7 @@ class block_flywelly extends block_base {
     $triesLeft = $this->getTriesLeft($USER->id);
     $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/blocks/flywelly/walker/public/bundle.js'));
     $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/flywelly/walker/public/bundle.css'));
-    $this->content->text = '<div id="walker" data-user='. $USER->id .' tries-left='. $triesLeft .'></div>';
+    $this->content->text = '<div id="walker" data-user='. $USER->id .' data-tries='. $triesLeft .'></div>';
     // $this->content->text = file_get_contents(__DIR__.'/walker/public/index.html');
     $this->content->footer = '';
     return $this->content;
