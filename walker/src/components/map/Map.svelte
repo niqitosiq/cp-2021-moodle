@@ -37,10 +37,10 @@
 
 	const points = [
 		{ x: 394, y: 494, type: "start" },
-		{ y: 448, x: 557, type: "prize" },
-		{ y: 518, x: 597, type: "prize" },
-		{ y: 585, x: 637, type: "prize" },
-		{ y: 652, x: 677, type: "prize" },
+		{ x: 448, y: 557, type: "prize" },
+		{ x: 518, y: 597, type: "prize" },
+		{ x: 585, y: 637, type: "prize" },
+		{ x: 652, y: 677, type: "prize" },
 	];
 </script>
 
