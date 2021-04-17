@@ -20,13 +20,16 @@
 				gsap.to("#user", {
 					x: rolled.x,
 					y: rolled.y,
+					duration: 2,
 				});
 				gsap.to("#map", {
 					y: -rolled.y,
+					duration: 4,
 				});
-				console.log(rolled);
 				if (rolled.type === "prize") {
-					roulette = true;
+					setTimeout(() => {
+						roulette = true;
+					}, 2500);
 				}
 			}, 3000);
 		isRolled = true;
@@ -70,6 +73,7 @@
 			gsap.to("#user", {
 				x: points[activePosition].x,
 				y: points[activePosition].y,
+				duration: 1,
 			});
 		}, 500);
 	});
@@ -87,9 +91,7 @@
 		</div>
 	{/if}
 	{#if roulette}
-		<div class="roll" transition:fade={{ duration: 600 }}>
-			<Roll bind:roulette />
-		</div>
+		<Roll bind:roulette />
 	{/if}
 	<div class="wrapper">
 		<div id="map" class:loaded>
