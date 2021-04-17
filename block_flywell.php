@@ -8,18 +8,9 @@ class block_flywell extends block_base {
     global $DB;
     global $USER;
     $DB->execute('DROP TABLE IF EXISTS "x_tries"');
-    print_r($DB->execute('CREATE TABLE IF NOT EXISTS "x_tries" ("userId" INTEGER, "tries" INTEGER)'));
-    // $res = $DB->get_record('x_tries', ['userId' => '1']);
-    // if (!$res) {
-    //   $DB->insert_record('x_tries', ['userId' => $USER->id, 'tries' => 5]);
-    // } 
   }
 
   protected function getTriesLeft () {
-    // global $DB;
-    // global $USER;
-    // $res = $DB->get_record('x_tries', ['id' => $USER->id]);
-    // if ($res) return $res;
     return 0;
   }
 

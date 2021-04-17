@@ -6966,7 +6966,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (56:1) {#if isRolled}
+    // (48:1) {#if isRolled}
     function create_if_block(ctx) {
     	let div;
     	let dice;
@@ -6979,8 +6979,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			create_component(dice.$$.fragment);
-    			attr_dev(div, "class", "dice svelte-158hbc");
-    			add_location(div, file$2, 56, 2, 1150);
+    			attr_dev(div, "class", "dice svelte-188bc70");
+    			add_location(div, file$2, 48, 2, 894);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -7016,24 +7016,24 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(56:1) {#if isRolled}",
+    		source: "(48:1) {#if isRolled}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (69:3) {#each points as { x, y }}
+    // (61:3) {#each points as { x, y }}
     function create_each_block(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "point svelte-158hbc");
+    			attr_dev(div, "class", "point svelte-188bc70");
     			set_style(div, "left", /*x*/ ctx[3] + "px");
     			set_style(div, "top", /*y*/ ctx[4] + "px");
-    			add_location(div, file$2, 69, 4, 1398);
+    			add_location(div, file$2, 61, 4, 1142);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -7048,14 +7048,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(69:3) {#each points as { x, y }}",
+    		source: "(61:3) {#each points as { x, y }}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (74:2) <Button on:click={rollDice}>
+    // (66:2) <Button on:click={rollDice}>
     function create_default_slot(ctx) {
     	let t;
 
@@ -7075,7 +7075,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(74:2) <Button on:click={rollDice}>",
+    		source: "(66:2) <Button on:click={rollDice}>",
     		ctx
     	});
 
@@ -7130,15 +7130,15 @@ var app = (function () {
     			create_component(button.$$.fragment);
     			if (img.src !== (img_src_value = "./city.svg")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "");
-    			attr_dev(img, "class", "svelte-158hbc");
-    			add_location(img, file$2, 66, 3, 1331);
+    			attr_dev(img, "class", "svelte-188bc70");
+    			add_location(img, file$2, 58, 3, 1075);
     			attr_dev(div0, "id", "map");
-    			attr_dev(div0, "class", "svelte-158hbc");
-    			add_location(div0, file$2, 65, 2, 1313);
-    			attr_dev(div1, "class", "wrapper svelte-158hbc");
-    			add_location(div1, file$2, 64, 1, 1289);
-    			attr_dev(div2, "class", "map-section svelte-158hbc");
-    			add_location(div2, file$2, 54, 0, 1106);
+    			attr_dev(div0, "class", "svelte-188bc70");
+    			add_location(div0, file$2, 57, 2, 1057);
+    			attr_dev(div1, "class", "wrapper svelte-188bc70");
+    			add_location(div1, file$2, 56, 1, 1033);
+    			attr_dev(div2, "class", "map-section svelte-188bc70");
+    			add_location(div2, file$2, 46, 0, 850);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7270,12 +7270,12 @@ var app = (function () {
     	}
 
     	const points = [
-    		{ x: 201, y: 163, type: "prize" },
-    		{ y: 223, x: 261, type: "prize" },
-    		{ y: 295, x: 301, type: "prize" }
-    	]; // { y: , x:, type: 'prize' },
-    	// { y: , x:, type: 'prize' },
-    	// { y: , x:, type: 'prize' },
+    		{ x: 394, y: 494, type: "start" },
+    		{ y: 448, x: 557, type: "prize" },
+    		{ y: 518, x: 597, type: "prize" },
+    		{ y: 585, x: 637, type: "prize" },
+    		{ y: 652, x: 677, type: "prize" }
+    	];
 
     	const writable_props = [];
 

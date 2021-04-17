@@ -36,19 +36,11 @@
 	}
 
 	const points = [
-		{ x: 201, y: 163, type: "prize" },
-		{ y: 223, x: 261, type: "prize" },
-		{ y: 295, x: 301, type: "prize" },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
-		// { y: , x:, type: 'prize' },
+		{ x: 394, y: 494, type: "start" },
+		{ y: 448, x: 557, type: "prize" },
+		{ y: 518, x: 597, type: "prize" },
+		{ y: 585, x: 637, type: "prize" },
+		{ y: 652, x: 677, type: "prize" },
 	];
 </script>
 
@@ -99,6 +91,7 @@
 		transform: translate(-750px, -100px);
 		transform-origin: right top;
 		z-index: 10;
+		position: relative;
 	}
 	img {
 		width: 2400px;
