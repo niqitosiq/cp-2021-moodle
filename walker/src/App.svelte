@@ -4,6 +4,7 @@
 	import Roll from "./components/roll/Roll.svelte";
 	import { fade } from "svelte/transition";
 
+	export let user;
 	let active = "map";
 
 	function getActiveView(view) {

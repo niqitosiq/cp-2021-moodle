@@ -1,10 +1,12 @@
 import App from './App.svelte';
 
-window.initWalker = (props) => {
+const initWalker = () => {
+	const walker = document.querySelector("#walker");
+
 	return new App({
-		target: document.querySelector("#walker"),
-		props
+		target: walker,
+		props: walker.dataset
 	});
 }
 
-window.initWalker();
+initWalker()
