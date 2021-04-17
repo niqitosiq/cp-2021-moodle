@@ -2,7 +2,7 @@
 	import Icon from "./ui/Icon.svelte";
 </script>
 
-<div>
+<div class="user">
 	<div class="picture">
 		<img
 			src="https://2.bp.blogspot.com/-SYZeEKXWltA/W_F8zblq64I/AAAAAAAABec/c9L0mbjGgcYoFfnD6V1Zpd6gK-VhxzSWwCLcBGAs/w1200-h630-p-k-no-nu/rect1313.png"
@@ -10,11 +10,13 @@
 		/>
 	</div>
 
-	<span class="name">Ищенко Александр</span>
+	<div class="person">
+		<span class="name">Ищенко Александр</span>
 
-	<div class="team">
-		<span>Команда</span>
-		<span>Синяя</span>
+		<div class="team">
+			<span class="team-label">Команда</span>
+			<span class="color">Синяя</span>
+		</div>
 	</div>
 
 	<div class="coins">
@@ -29,11 +31,11 @@
 <style lang="scss">
 	@keyframes circleZoom1 {
 		0% {
-			transform: scale(1);
+			transform: scale(0.6);
 			opacity: 1;
 		}
 		100% {
-			transform: scale(1.4);
+			transform: scale(1);
 			opacity: 0;
 		}
 	}
@@ -43,7 +45,7 @@
 			opacity: 1;
 		}
 		100% {
-			transform: scale(1.2);
+			transform: scale(1.4);
 			opacity: 0;
 		}
 	}
@@ -65,6 +67,7 @@
 			border-radius: 100%;
 			border: solid 1px #1b2d6b;
 			animation: circleZoom1 ease 1.5s infinite;
+			z-index: 2;
 		}
 		&:after {
 			animation-name: circleZoom2;
@@ -74,6 +77,63 @@
 			height: 70px;
 			border-radius: 70px;
 			object-fit: cover;
+			position: relative;
+			background-color: #fff;
+			z-index: 5;
+		}
+	}
+	.user {
+		display: flex;
+		align-items: center;
+		&:after {
+			content: "";
+			height: 58px;
+			width: 1px;
+			background: #e0e0e0;
+			margin-left: 40px;
+		}
+	}
+	.person {
+		margin-left: 20px;
+		margin-right: 40px;
+	}
+	.name {
+		font-weight: bold;
+		font-size: 14px;
+		color: #282828;
+		margin-bottom: 2px;
+	}
+	.team {
+		display: flex;
+		&-label {
+			font-size: 12px;
+			line-height: 15px;
+			color: #9b9b9b;
+		}
+		.color {
+			font-size: 12px;
+			color: #1b2d6b;
+			display: flex;
+			align-items: center;
+			margin-left: 10px;
+			&:before {
+				content: "";
+				width: 5px;
+				height: 5px;
+				border-radius: 5px;
+				background: #1b2d6b;
+				margin-right: 4px;
+			}
+		}
+	}
+	.coins {
+		display: flex;
+		align-items: center;
+		span {
+			margin-left: 10px;
+			font-weight: 600;
+			font-size: 14px;
+			color: #282828;
 		}
 	}
 </style>

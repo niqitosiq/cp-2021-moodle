@@ -1,14 +1,11 @@
 <script>
+	import Button from "./ui/Button.svelte";
+
 	function rollDice() {
 		const dice = [...document.querySelectorAll(".die-list")];
 		dice.forEach((die) => {
-			toggleClasses(die);
 			die.dataset.roll = getRandomNumber(1, 6);
 		});
-	}
-
-	function toggleClasses(die) {
-		die.classList.toggle("roll");
 	}
 
 	function getRandomNumber(min, max) {
@@ -55,7 +52,7 @@
 		</li>
 	</ol>
 
-	<button on:click={rollDice}>Вращать</button>
+	<Button on:click={rollDice}>Вращать</Button>
 </div>
 
 <style lang="scss">
