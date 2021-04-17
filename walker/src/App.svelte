@@ -1,8 +1,19 @@
 <script>
 	import Header from "./components/Header.svelte";
-	import Dice from "./components/Dice.svelte";
+	import Map from "./components/map/Map.svelte";
+	import Roll from "./components/roll/Roll.svelte";
+	import { fade } from "svelte/transition";
 
 	let active = "map";
+
+	function getActiveView(view) {
+		return {
+			map: Map,
+			bag: Roll,
+		}[view];
+	}
+	let activeView;
+	$: activeView = getActiveView(active);
 </script>
 
 <svelte:head>
@@ -14,8 +25,17 @@
 </svelte:head>
 
 <main>
-	<Header {active} />
-	<Dice />
+	<Header bind:active />
+
+	{#key active}
+		<div
+			class="wrapper"
+			in:fade={{ delay: 210, duration: 200 }}
+			out:fade={{ delay: 0, duration: 200 }}
+		>
+			<svelte:component this={activeView} />
+		</div>
+	{/key}
 </main>
 
 <style lang="scss">

@@ -1,5 +1,6 @@
 <script>
 	import Icon from "./ui/Icon.svelte";
+	import More from "./ui/More.svelte";
 	import User from "./User.svelte";
 
 	export let active = "map";
@@ -29,6 +30,8 @@
 			</div>
 		{/each}
 	</div>
+
+	<More />
 </div>
 
 <style lang="scss">
@@ -45,6 +48,8 @@
 	}
 	.items {
 		display: flex;
+		margin-left: auto;
+		margin-right: 30px;
 	}
 	.item {
 		width: 103px;

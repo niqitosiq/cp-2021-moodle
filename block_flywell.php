@@ -14,7 +14,11 @@ class block_flywell extends block_base {
     }
  
     $this->content = new stdClass;
-    $this->content->text = '<div id="walker"></div><style>'.file_get_contents(__DIR__.'/walker/public/bundle.css').'</style><script>'.file_get_contents(__DIR__.'/walker/public/bundle.js').'</script>';
+    global $PAGE;
+    global $CFG;
+    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/blocks/flywell/walker/public/bundle.js'));
+    $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/flywell/walker/public/bundle.css'));
+    $this->content->text = '<div id="walker"></div>';
     // $this->content->text = file_get_contents(__DIR__.'/walker/public/index.html');
     $this->content->footer = 'Привет, мир на русском';
     return $this->content;
