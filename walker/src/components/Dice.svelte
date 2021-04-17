@@ -1,10 +1,11 @@
 <script>
 	import { onMount } from "svelte";
-
+	export let random;
 	function rollDice() {
 		const dice = [...document.querySelectorAll(".die-list")];
 		dice.forEach((die) => {
-			die.dataset.roll = getRandomNumber(1, 6);
+			random = 3; //getRandomNumber(0, 5);
+			die.dataset.roll = random;
 		});
 	}
 

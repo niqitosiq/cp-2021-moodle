@@ -1,7 +1,6 @@
 <script>
 	import Header from "./components/Header.svelte";
 	import Map from "./components/map/Map.svelte";
-	import Roll from "./components/roll/Roll.svelte";
 	import { fade } from "svelte/transition";
 
 	export let user;
@@ -11,7 +10,7 @@
 	function getActiveView(view) {
 		return {
 			map: Map,
-			bag: Roll,
+			collection: Map,
 		}[view];
 	}
 	let activeView;

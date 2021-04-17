@@ -4,34 +4,76 @@
 	import { gsap } from "gsap";
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
+	import Roll from "../roll/Roll.svelte";
 
-	onMount(() => {
-		const tl = gsap.timeline();
-		tl.to(
-			"#map",
-			{
-				x: -350,
-				y: -50,
-				duration: 10,
-			},
-			"-=2"
-		).to("#map", { scale: 1.2, duration: 9, ease: "power2.out" }, "-=6");
-	});
+	export let activePosition = 0;
 
 	let isRolled = false;
+	let roulette = false;
+	let loaded = false;
 
 	function rollDice() {
-		if (!isRolled) setTimeout(() => (isRolled = false), 3000);
+		if (!isRolled)
+			setTimeout(() => {
+				isRolled = false;
+				const rolled = points[activePosition];
+				gsap.to("#user", {
+					x: rolled.x,
+					y: rolled.y,
+				});
+				gsap.to("#map", {
+					y: -rolled.y,
+				});
+				console.log(rolled);
+				if (rolled.type === "prize") {
+					roulette = true;
+				}
+			}, 3000);
 		isRolled = true;
 	}
 
 	const points = [
 		{ x: 394, y: 494, type: "start" },
-		{ x: 448, y: 557, type: "prize" },
-		{ x: 518, y: 597, type: "prize" },
+		{ x: 448, y: 557, type: "empty" },
+		{ x: 518, y: 597, type: "empty" },
 		{ x: 585, y: 637, type: "prize" },
-		{ x: 652, y: 677, type: "prize" },
+		{ x: 652, y: 677, type: "empty" },
+		{ x: 857, y: 790, type: "empty" },
+		{ x: 920, y: 820, type: "empty" },
 	];
+
+	onMount(() => {
+		setTimeout(() => {
+			loaded = true;
+
+			const tl = gsap.timeline();
+			tl.to(
+				"#map",
+				{
+					x: -880,
+					y: -120,
+					duration: 5,
+				},
+				"-=2"
+			)
+				.to(
+					"#map",
+					{
+						x: 460,
+						y: -470,
+						duration: 5,
+					},
+					"-=2"
+				)
+				.to("#map", { scale: 1.2, duration: 9, ease: "power2.out" }, "-=6");
+
+			gsap.to("#user", {
+				x: points[activePosition].x,
+				y: points[activePosition].y,
+			});
+		}, 500);
+	});
+	window.addEventListener("load", () => {});
 </script>
 
 <div class="map-section">
@@ -41,16 +83,26 @@
 			in:fade={{ delay: 210, duration: 200 }}
 			out:fade={{ delay: 0, duration: 200 }}
 		>
-			<Dice />
+			<Dice bind:random={activePosition} />
+		</div>
+	{/if}
+	{#if roulette}
+		<div class="roll" transition:fade={{ duration: 200 }}>
+			<Roll bind:roulette />
 		</div>
 	{/if}
 	<div class="wrapper">
-		<div id="map">
+		<div id="map" class:loaded>
 			<img src="./city.svg" alt="" />
 
-			{#each points as { x, y }}
-				<div class="point" style="left: {x}px; top: {y}px;" />
-			{/each}
+			<div id="user">
+				<div class="picture">
+					<img
+						src="https://2.bp.blogspot.com/-SYZeEKXWltA/W_F8zblq64I/AAAAAAAABec/c9L0mbjGgcYoFfnD6V1Zpd6gK-VhxzSWwCLcBGAs/w1200-h630-p-k-no-nu/rect1313.png"
+						alt=""
+					/>
+				</div>
+			</div>
 		</div>
 
 		<Button on:click={rollDice}>Бросить кубик</Button>
@@ -78,20 +130,18 @@
 		}
 	}
 	#map {
-		transform: translate(-1500px, -400px);
+		transform: translate(-1040px, 30px);
 		transform-origin: left top;
 		z-index: 10;
 		position: relative;
-	}
-	img {
-		width: 2400px;
-	}
-	.point {
-		position: absolute;
-		width: 30px;
-		height: 30px;
-		z-index: 300;
-		background-color: #000;
+		opacity: 0;
+		transition: opacity ease 0.3s;
+		&.loaded {
+			opacity: 1;
+		}
+		> img {
+			width: 2400px;
+		}
 	}
 	.dice {
 		position: absolute;
@@ -102,5 +152,30 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+	.picture {
+		width: 30px;
+		height: 30px;
+		border-radius: 30px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+		background-color: #f55063;
+		img {
+			width: 70px;
+			height: 70px;
+			border-radius: 70px;
+			object-fit: cover;
+			position: relative;
+			background-color: #fff;
+			z-index: 5;
+		}
+	}
+	#user {
+		left: 0;
+		top: 0;
+		position: absolute;
+		z-index: 30;
 	}
 </style>
