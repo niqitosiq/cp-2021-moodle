@@ -1,6 +1,6 @@
-<XMLDB xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PATH="mod/flywellx/db" VERSION="20210417" COMMENT="XMLDB file for Page module" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+<XMLDB xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PATH="blocks/flywelly/db" VERSION="20210417" COMMENT="XMLDB file for Page module" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
 <TABLES>
-<TABLE NAME="flywellx" COMMENT="Each record is one page and its config data">
+<TABLE NAME="flywelly" COMMENT="Each record is one page and its config data">
 <FIELDS>
 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
 <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -23,7 +23,7 @@
 <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
 </INDEXES>
 </TABLE>
-<TABLE NAME="flywellx_rolls" COMMENT="Default comment for the table, please edit me">
+<TABLE NAME="flywelly_rolls" COMMENT="Default comment for the table, please edit me">
 <FIELDS>
 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -33,7 +33,7 @@
 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
 </KEYS>
 </TABLE>
-<TABLE NAME="flywellx_inventory" COMMENT="Default comment for the table, please edit me">
+<TABLE NAME="flywelly_inventory" COMMENT="Default comment for the table, please edit me">
 <FIELDS>
 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -43,7 +43,7 @@
 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
 </KEYS>
 </TABLE>
-<TABLE NAME="flywellx_prizes" COMMENT="Default comment for the table, please edit me">
+<TABLE NAME="flywelly_prizes" COMMENT="Default comment for the table, please edit me">
 <FIELDS>
 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -53,7 +53,7 @@
 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
 </KEYS>
 </TABLE>
-<TABLE NAME="flywellx_pos" COMMENT="Default comment for the table, please edit me">
+<TABLE NAME="flywelly_pos" COMMENT="Default comment for the table, please edit me">
 <FIELDS>
 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

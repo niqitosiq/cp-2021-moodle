@@ -10,22 +10,12 @@
 		tl.to(
 			"#map",
 			{
-				x: -700,
-				y: -300,
-				duration: 5,
+				x: -350,
+				y: -50,
+				duration: 10,
 			},
 			"-=2"
-		)
-			.to(
-				"#map",
-				{
-					x: 400,
-					y: -300,
-					duration: 5,
-				},
-				"-=2"
-			)
-			.to("#map", { scale: 1, duration: 9, ease: "power2.out" }, "-=10");
+		).to("#map", { scale: 1.2, duration: 9, ease: "power2.out" }, "-=6");
 	});
 
 	let isRolled = false;
@@ -88,8 +78,8 @@
 		}
 	}
 	#map {
-		transform: translate(-750px, -100px);
-		transform-origin: right top;
+		transform: translate(-1500px, -400px);
+		transform-origin: left top;
 		z-index: 10;
 		position: relative;
 	}

@@ -6966,7 +6966,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (48:1) {#if isRolled}
+    // (38:1) {#if isRolled}
     function create_if_block(ctx) {
     	let div;
     	let dice;
@@ -6979,8 +6979,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			create_component(dice.$$.fragment);
-    			attr_dev(div, "class", "dice svelte-188bc70");
-    			add_location(div, file$2, 48, 2, 894);
+    			attr_dev(div, "class", "dice svelte-1q4er22");
+    			add_location(div, file$2, 38, 2, 798);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -7016,24 +7016,24 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(48:1) {#if isRolled}",
+    		source: "(38:1) {#if isRolled}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (61:3) {#each points as { x, y }}
+    // (51:3) {#each points as { x, y }}
     function create_each_block(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "point svelte-188bc70");
+    			attr_dev(div, "class", "point svelte-1q4er22");
     			set_style(div, "left", /*x*/ ctx[3] + "px");
     			set_style(div, "top", /*y*/ ctx[4] + "px");
-    			add_location(div, file$2, 61, 4, 1142);
+    			add_location(div, file$2, 51, 4, 1046);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -7048,14 +7048,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(61:3) {#each points as { x, y }}",
+    		source: "(51:3) {#each points as { x, y }}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (66:2) <Button on:click={rollDice}>
+    // (56:2) <Button on:click={rollDice}>
     function create_default_slot(ctx) {
     	let t;
 
@@ -7075,7 +7075,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(66:2) <Button on:click={rollDice}>",
+    		source: "(56:2) <Button on:click={rollDice}>",
     		ctx
     	});
 
@@ -7130,15 +7130,15 @@ var app = (function () {
     			create_component(button.$$.fragment);
     			if (img.src !== (img_src_value = "./city.svg")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "");
-    			attr_dev(img, "class", "svelte-188bc70");
-    			add_location(img, file$2, 58, 3, 1075);
+    			attr_dev(img, "class", "svelte-1q4er22");
+    			add_location(img, file$2, 48, 3, 979);
     			attr_dev(div0, "id", "map");
-    			attr_dev(div0, "class", "svelte-188bc70");
-    			add_location(div0, file$2, 57, 2, 1057);
-    			attr_dev(div1, "class", "wrapper svelte-188bc70");
-    			add_location(div1, file$2, 56, 1, 1033);
-    			attr_dev(div2, "class", "map-section svelte-188bc70");
-    			add_location(div2, file$2, 46, 0, 850);
+    			attr_dev(div0, "class", "svelte-1q4er22");
+    			add_location(div0, file$2, 47, 2, 961);
+    			attr_dev(div1, "class", "wrapper svelte-1q4er22");
+    			add_location(div1, file$2, 46, 1, 937);
+    			attr_dev(div2, "class", "map-section svelte-1q4er22");
+    			add_location(div2, file$2, 36, 0, 754);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7251,14 +7251,14 @@ var app = (function () {
     	onMount(() => {
     		const tl = gsapWithCSS.timeline();
 
-    		tl.to("#map", { x: -700, y: -300, duration: 5 }, "-=2").to("#map", { x: 400, y: -300, duration: 5 }, "-=2").to(
+    		tl.to("#map", { x: -350, y: -50, duration: 10 }, "-=2").to(
     			"#map",
     			{
-    				scale: 1,
+    				scale: 1.2,
     				duration: 9,
     				ease: "power2.out"
     			},
-    			"-=10"
+    			"-=6"
     		);
     	});
 

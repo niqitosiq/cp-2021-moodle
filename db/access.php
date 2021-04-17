@@ -1,7 +1,7 @@
 <?php
     $capabilities = array(
  
-    'block/flywell:myaddinstance' => array(
+    'block/flywelly:myaddinstance' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
@@ -11,7 +11,7 @@
         'clonepermissionsfrom' => 'moodle/my:manageblocks'
     ),
  
-    'block/flywell:addinstance' => array(
+    'block/flywelly:addinstance' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
  
         'captype' => 'write',
