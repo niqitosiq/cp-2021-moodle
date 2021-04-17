@@ -82,7 +82,7 @@
 		width: 6rem;
 	}
 	.roll {
-		transition: transform 10s ease-out;
+		transition: transform 5s ease;
 	}
 	.die-item {
 		background-color: #4055f6;

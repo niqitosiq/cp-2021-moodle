@@ -3,7 +3,7 @@
 </script>
 
 <svg class="inline-svg-icon">
-	<use xlink:href={`/my/frontend/bundle.svg#${name}`} />
+	<use xlink:href={`/bundle.svg#${name}`} />
 </svg>
 
 <style global>

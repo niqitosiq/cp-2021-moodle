@@ -11,7 +11,7 @@ class block_flywell extends block_base {
     }
  
     $this->content = new stdClass;
-    $this->content->text = '<div id="walker"></div><link href="/my/frontend/bundle.css" rel="stylesheet"></link><script src="/my/frontend/bundle.js"></script>';
+    $this->content->text = '<div id="walker"></div><style>'.file_get_contents(__DIR__.'/walker/public/bundle.css').'</style><script>'.file_get_contents(__DIR__.'/walker/public/bundle.js').'</script>';
     $this->content->footer = 'Привет, мир на русском';
     return $this->content;
   }

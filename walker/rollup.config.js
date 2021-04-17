@@ -47,7 +47,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: production ? '/home/moodle/my/frontend/bundle.js' : 'public/bundle.js'
+		file: 'public/bundle.js'
 	},
 	plugins: [
 		svelte({
@@ -61,7 +61,7 @@ export default {
 		
 		svgicons({
 			inputFolder: 'src/icons',
-			output: production ? '/home/moodle/my/frontend/bundle.svg' : 'public/my/frontend/bundle.svg',
+			output: 'public/bundle.svg',
 		}),
 
 		resolve({

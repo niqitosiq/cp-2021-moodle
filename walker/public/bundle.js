@@ -383,1468 +383,11 @@
         $inject_state() { }
     }
 
-    var bind = function bind(fn, thisArg) {
-      return function wrap() {
-        var args = new Array(arguments.length);
-        for (var i = 0; i < args.length; i++) {
-          args[i] = arguments[i];
-        }
-        return fn.apply(thisArg, args);
-      };
-    };
-
-    /*global toString:true*/
-
-    // utils is a library of generic helper functions non-specific to axios
-
-    var toString = Object.prototype.toString;
-
-    /**
-     * Determine if a value is an Array
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is an Array, otherwise false
-     */
-    function isArray(val) {
-      return toString.call(val) === '[object Array]';
-    }
-
-    /**
-     * Determine if a value is undefined
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if the value is undefined, otherwise false
-     */
-    function isUndefined(val) {
-      return typeof val === 'undefined';
-    }
-
-    /**
-     * Determine if a value is a Buffer
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a Buffer, otherwise false
-     */
-    function isBuffer(val) {
-      return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor)
-        && typeof val.constructor.isBuffer === 'function' && val.constructor.isBuffer(val);
-    }
-
-    /**
-     * Determine if a value is an ArrayBuffer
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is an ArrayBuffer, otherwise false
-     */
-    function isArrayBuffer(val) {
-      return toString.call(val) === '[object ArrayBuffer]';
-    }
-
-    /**
-     * Determine if a value is a FormData
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is an FormData, otherwise false
-     */
-    function isFormData(val) {
-      return (typeof FormData !== 'undefined') && (val instanceof FormData);
-    }
-
-    /**
-     * Determine if a value is a view on an ArrayBuffer
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
-     */
-    function isArrayBufferView(val) {
-      var result;
-      if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuffer.isView)) {
-        result = ArrayBuffer.isView(val);
-      } else {
-        result = (val) && (val.buffer) && (val.buffer instanceof ArrayBuffer);
-      }
-      return result;
-    }
-
-    /**
-     * Determine if a value is a String
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a String, otherwise false
-     */
-    function isString(val) {
-      return typeof val === 'string';
-    }
-
-    /**
-     * Determine if a value is a Number
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a Number, otherwise false
-     */
-    function isNumber(val) {
-      return typeof val === 'number';
-    }
-
-    /**
-     * Determine if a value is an Object
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is an Object, otherwise false
-     */
-    function isObject(val) {
-      return val !== null && typeof val === 'object';
-    }
-
-    /**
-     * Determine if a value is a plain Object
-     *
-     * @param {Object} val The value to test
-     * @return {boolean} True if value is a plain Object, otherwise false
-     */
-    function isPlainObject(val) {
-      if (toString.call(val) !== '[object Object]') {
-        return false;
-      }
-
-      var prototype = Object.getPrototypeOf(val);
-      return prototype === null || prototype === Object.prototype;
-    }
-
-    /**
-     * Determine if a value is a Date
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a Date, otherwise false
-     */
-    function isDate(val) {
-      return toString.call(val) === '[object Date]';
-    }
-
-    /**
-     * Determine if a value is a File
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a File, otherwise false
-     */
-    function isFile(val) {
-      return toString.call(val) === '[object File]';
-    }
-
-    /**
-     * Determine if a value is a Blob
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a Blob, otherwise false
-     */
-    function isBlob(val) {
-      return toString.call(val) === '[object Blob]';
-    }
-
-    /**
-     * Determine if a value is a Function
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a Function, otherwise false
-     */
-    function isFunction(val) {
-      return toString.call(val) === '[object Function]';
-    }
-
-    /**
-     * Determine if a value is a Stream
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a Stream, otherwise false
-     */
-    function isStream(val) {
-      return isObject(val) && isFunction(val.pipe);
-    }
-
-    /**
-     * Determine if a value is a URLSearchParams object
-     *
-     * @param {Object} val The value to test
-     * @returns {boolean} True if value is a URLSearchParams object, otherwise false
-     */
-    function isURLSearchParams(val) {
-      return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams;
-    }
-
-    /**
-     * Trim excess whitespace off the beginning and end of a string
-     *
-     * @param {String} str The String to trim
-     * @returns {String} The String freed of excess whitespace
-     */
-    function trim(str) {
-      return str.replace(/^\s*/, '').replace(/\s*$/, '');
-    }
-
-    /**
-     * Determine if we're running in a standard browser environment
-     *
-     * This allows axios to run in a web worker, and react-native.
-     * Both environments support XMLHttpRequest, but not fully standard globals.
-     *
-     * web workers:
-     *  typeof window -> undefined
-     *  typeof document -> undefined
-     *
-     * react-native:
-     *  navigator.product -> 'ReactNative'
-     * nativescript
-     *  navigator.product -> 'NativeScript' or 'NS'
-     */
-    function isStandardBrowserEnv() {
-      if (typeof navigator !== 'undefined' && (navigator.product === 'ReactNative' ||
-                                               navigator.product === 'NativeScript' ||
-                                               navigator.product === 'NS')) {
-        return false;
-      }
-      return (
-        typeof window !== 'undefined' &&
-        typeof document !== 'undefined'
-      );
-    }
-
-    /**
-     * Iterate over an Array or an Object invoking a function for each item.
-     *
-     * If `obj` is an Array callback will be called passing
-     * the value, index, and complete array for each item.
-     *
-     * If 'obj' is an Object callback will be called passing
-     * the value, key, and complete object for each property.
-     *
-     * @param {Object|Array} obj The object to iterate
-     * @param {Function} fn The callback to invoke for each item
-     */
-    function forEach(obj, fn) {
-      // Don't bother if no value provided
-      if (obj === null || typeof obj === 'undefined') {
-        return;
-      }
-
-      // Force an array if not already something iterable
-      if (typeof obj !== 'object') {
-        /*eslint no-param-reassign:0*/
-        obj = [obj];
-      }
-
-      if (isArray(obj)) {
-        // Iterate over array values
-        for (var i = 0, l = obj.length; i < l; i++) {
-          fn.call(null, obj[i], i, obj);
-        }
-      } else {
-        // Iterate over object keys
-        for (var key in obj) {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            fn.call(null, obj[key], key, obj);
-          }
-        }
-      }
-    }
-
-    /**
-     * Accepts varargs expecting each argument to be an object, then
-     * immutably merges the properties of each object and returns result.
-     *
-     * When multiple objects contain the same key the later object in
-     * the arguments list will take precedence.
-     *
-     * Example:
-     *
-     * ```js
-     * var result = merge({foo: 123}, {foo: 456});
-     * console.log(result.foo); // outputs 456
-     * ```
-     *
-     * @param {Object} obj1 Object to merge
-     * @returns {Object} Result of all merge properties
-     */
-    function merge(/* obj1, obj2, obj3, ... */) {
-      var result = {};
-      function assignValue(val, key) {
-        if (isPlainObject(result[key]) && isPlainObject(val)) {
-          result[key] = merge(result[key], val);
-        } else if (isPlainObject(val)) {
-          result[key] = merge({}, val);
-        } else if (isArray(val)) {
-          result[key] = val.slice();
-        } else {
-          result[key] = val;
-        }
-      }
-
-      for (var i = 0, l = arguments.length; i < l; i++) {
-        forEach(arguments[i], assignValue);
-      }
-      return result;
-    }
-
-    /**
-     * Extends object a by mutably adding to it the properties of object b.
-     *
-     * @param {Object} a The object to be extended
-     * @param {Object} b The object to copy properties from
-     * @param {Object} thisArg The object to bind function to
-     * @return {Object} The resulting value of object a
-     */
-    function extend(a, b, thisArg) {
-      forEach(b, function assignValue(val, key) {
-        if (thisArg && typeof val === 'function') {
-          a[key] = bind(val, thisArg);
-        } else {
-          a[key] = val;
-        }
-      });
-      return a;
-    }
-
-    /**
-     * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
-     *
-     * @param {string} content with BOM
-     * @return {string} content value without BOM
-     */
-    function stripBOM(content) {
-      if (content.charCodeAt(0) === 0xFEFF) {
-        content = content.slice(1);
-      }
-      return content;
-    }
-
-    var utils = {
-      isArray: isArray,
-      isArrayBuffer: isArrayBuffer,
-      isBuffer: isBuffer,
-      isFormData: isFormData,
-      isArrayBufferView: isArrayBufferView,
-      isString: isString,
-      isNumber: isNumber,
-      isObject: isObject,
-      isPlainObject: isPlainObject,
-      isUndefined: isUndefined,
-      isDate: isDate,
-      isFile: isFile,
-      isBlob: isBlob,
-      isFunction: isFunction,
-      isStream: isStream,
-      isURLSearchParams: isURLSearchParams,
-      isStandardBrowserEnv: isStandardBrowserEnv,
-      forEach: forEach,
-      merge: merge,
-      extend: extend,
-      trim: trim,
-      stripBOM: stripBOM
-    };
-
-    function encode(val) {
-      return encodeURIComponent(val).
-        replace(/%3A/gi, ':').
-        replace(/%24/g, '$').
-        replace(/%2C/gi, ',').
-        replace(/%20/g, '+').
-        replace(/%5B/gi, '[').
-        replace(/%5D/gi, ']');
-    }
-
-    /**
-     * Build a URL by appending params to the end
-     *
-     * @param {string} url The base of the url (e.g., http://www.google.com)
-     * @param {object} [params] The params to be appended
-     * @returns {string} The formatted url
-     */
-    var buildURL = function buildURL(url, params, paramsSerializer) {
-      /*eslint no-param-reassign:0*/
-      if (!params) {
-        return url;
-      }
-
-      var serializedParams;
-      if (paramsSerializer) {
-        serializedParams = paramsSerializer(params);
-      } else if (utils.isURLSearchParams(params)) {
-        serializedParams = params.toString();
-      } else {
-        var parts = [];
-
-        utils.forEach(params, function serialize(val, key) {
-          if (val === null || typeof val === 'undefined') {
-            return;
-          }
-
-          if (utils.isArray(val)) {
-            key = key + '[]';
-          } else {
-            val = [val];
-          }
-
-          utils.forEach(val, function parseValue(v) {
-            if (utils.isDate(v)) {
-              v = v.toISOString();
-            } else if (utils.isObject(v)) {
-              v = JSON.stringify(v);
-            }
-            parts.push(encode(key) + '=' + encode(v));
-          });
-        });
-
-        serializedParams = parts.join('&');
-      }
-
-      if (serializedParams) {
-        var hashmarkIndex = url.indexOf('#');
-        if (hashmarkIndex !== -1) {
-          url = url.slice(0, hashmarkIndex);
-        }
-
-        url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
-      }
-
-      return url;
-    };
-
-    function InterceptorManager() {
-      this.handlers = [];
-    }
-
-    /**
-     * Add a new interceptor to the stack
-     *
-     * @param {Function} fulfilled The function to handle `then` for a `Promise`
-     * @param {Function} rejected The function to handle `reject` for a `Promise`
-     *
-     * @return {Number} An ID used to remove interceptor later
-     */
-    InterceptorManager.prototype.use = function use(fulfilled, rejected) {
-      this.handlers.push({
-        fulfilled: fulfilled,
-        rejected: rejected
-      });
-      return this.handlers.length - 1;
-    };
-
-    /**
-     * Remove an interceptor from the stack
-     *
-     * @param {Number} id The ID that was returned by `use`
-     */
-    InterceptorManager.prototype.eject = function eject(id) {
-      if (this.handlers[id]) {
-        this.handlers[id] = null;
-      }
-    };
-
-    /**
-     * Iterate over all the registered interceptors
-     *
-     * This method is particularly useful for skipping over any
-     * interceptors that may have become `null` calling `eject`.
-     *
-     * @param {Function} fn The function to call for each interceptor
-     */
-    InterceptorManager.prototype.forEach = function forEach(fn) {
-      utils.forEach(this.handlers, function forEachHandler(h) {
-        if (h !== null) {
-          fn(h);
-        }
-      });
-    };
-
-    var InterceptorManager_1 = InterceptorManager;
-
-    /**
-     * Transform the data for a request or a response
-     *
-     * @param {Object|String} data The data to be transformed
-     * @param {Array} headers The headers for the request or response
-     * @param {Array|Function} fns A single function or Array of functions
-     * @returns {*} The resulting transformed data
-     */
-    var transformData = function transformData(data, headers, fns) {
-      /*eslint no-param-reassign:0*/
-      utils.forEach(fns, function transform(fn) {
-        data = fn(data, headers);
-      });
-
-      return data;
-    };
-
-    var isCancel = function isCancel(value) {
-      return !!(value && value.__CANCEL__);
-    };
-
-    var normalizeHeaderName = function normalizeHeaderName(headers, normalizedName) {
-      utils.forEach(headers, function processHeader(value, name) {
-        if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-          headers[normalizedName] = value;
-          delete headers[name];
-        }
-      });
-    };
-
-    /**
-     * Update an Error with the specified config, error code, and response.
-     *
-     * @param {Error} error The error to update.
-     * @param {Object} config The config.
-     * @param {string} [code] The error code (for example, 'ECONNABORTED').
-     * @param {Object} [request] The request.
-     * @param {Object} [response] The response.
-     * @returns {Error} The error.
-     */
-    var enhanceError = function enhanceError(error, config, code, request, response) {
-      error.config = config;
-      if (code) {
-        error.code = code;
-      }
-
-      error.request = request;
-      error.response = response;
-      error.isAxiosError = true;
-
-      error.toJSON = function toJSON() {
-        return {
-          // Standard
-          message: this.message,
-          name: this.name,
-          // Microsoft
-          description: this.description,
-          number: this.number,
-          // Mozilla
-          fileName: this.fileName,
-          lineNumber: this.lineNumber,
-          columnNumber: this.columnNumber,
-          stack: this.stack,
-          // Axios
-          config: this.config,
-          code: this.code
-        };
-      };
-      return error;
-    };
-
-    /**
-     * Create an Error with the specified message, config, error code, request and response.
-     *
-     * @param {string} message The error message.
-     * @param {Object} config The config.
-     * @param {string} [code] The error code (for example, 'ECONNABORTED').
-     * @param {Object} [request] The request.
-     * @param {Object} [response] The response.
-     * @returns {Error} The created error.
-     */
-    var createError = function createError(message, config, code, request, response) {
-      var error = new Error(message);
-      return enhanceError(error, config, code, request, response);
-    };
-
-    /**
-     * Resolve or reject a Promise based on response status.
-     *
-     * @param {Function} resolve A function that resolves the promise.
-     * @param {Function} reject A function that rejects the promise.
-     * @param {object} response The response.
-     */
-    var settle = function settle(resolve, reject, response) {
-      var validateStatus = response.config.validateStatus;
-      if (!response.status || !validateStatus || validateStatus(response.status)) {
-        resolve(response);
-      } else {
-        reject(createError(
-          'Request failed with status code ' + response.status,
-          response.config,
-          null,
-          response.request,
-          response
-        ));
-      }
-    };
-
-    var cookies = (
-      utils.isStandardBrowserEnv() ?
-
-      // Standard browser envs support document.cookie
-        (function standardBrowserEnv() {
-          return {
-            write: function write(name, value, expires, path, domain, secure) {
-              var cookie = [];
-              cookie.push(name + '=' + encodeURIComponent(value));
-
-              if (utils.isNumber(expires)) {
-                cookie.push('expires=' + new Date(expires).toGMTString());
-              }
-
-              if (utils.isString(path)) {
-                cookie.push('path=' + path);
-              }
-
-              if (utils.isString(domain)) {
-                cookie.push('domain=' + domain);
-              }
-
-              if (secure === true) {
-                cookie.push('secure');
-              }
-
-              document.cookie = cookie.join('; ');
-            },
-
-            read: function read(name) {
-              var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-              return (match ? decodeURIComponent(match[3]) : null);
-            },
-
-            remove: function remove(name) {
-              this.write(name, '', Date.now() - 86400000);
-            }
-          };
-        })() :
-
-      // Non standard browser env (web workers, react-native) lack needed support.
-        (function nonStandardBrowserEnv() {
-          return {
-            write: function write() {},
-            read: function read() { return null; },
-            remove: function remove() {}
-          };
-        })()
-    );
-
-    /**
-     * Determines whether the specified URL is absolute
-     *
-     * @param {string} url The URL to test
-     * @returns {boolean} True if the specified URL is absolute, otherwise false
-     */
-    var isAbsoluteURL = function isAbsoluteURL(url) {
-      // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-      // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-      // by any combination of letters, digits, plus, period, or hyphen.
-      return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-    };
-
-    /**
-     * Creates a new URL by combining the specified URLs
-     *
-     * @param {string} baseURL The base URL
-     * @param {string} relativeURL The relative URL
-     * @returns {string} The combined URL
-     */
-    var combineURLs = function combineURLs(baseURL, relativeURL) {
-      return relativeURL
-        ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
-        : baseURL;
-    };
-
-    /**
-     * Creates a new URL by combining the baseURL with the requestedURL,
-     * only when the requestedURL is not already an absolute URL.
-     * If the requestURL is absolute, this function returns the requestedURL untouched.
-     *
-     * @param {string} baseURL The base URL
-     * @param {string} requestedURL Absolute or relative URL to combine
-     * @returns {string} The combined full path
-     */
-    var buildFullPath = function buildFullPath(baseURL, requestedURL) {
-      if (baseURL && !isAbsoluteURL(requestedURL)) {
-        return combineURLs(baseURL, requestedURL);
-      }
-      return requestedURL;
-    };
-
-    // Headers whose duplicates are ignored by node
-    // c.f. https://nodejs.org/api/http.html#http_message_headers
-    var ignoreDuplicateOf = [
-      'age', 'authorization', 'content-length', 'content-type', 'etag',
-      'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
-      'last-modified', 'location', 'max-forwards', 'proxy-authorization',
-      'referer', 'retry-after', 'user-agent'
-    ];
-
-    /**
-     * Parse headers into an object
-     *
-     * ```
-     * Date: Wed, 27 Aug 2014 08:58:49 GMT
-     * Content-Type: application/json
-     * Connection: keep-alive
-     * Transfer-Encoding: chunked
-     * ```
-     *
-     * @param {String} headers Headers needing to be parsed
-     * @returns {Object} Headers parsed into an object
-     */
-    var parseHeaders = function parseHeaders(headers) {
-      var parsed = {};
-      var key;
-      var val;
-      var i;
-
-      if (!headers) { return parsed; }
-
-      utils.forEach(headers.split('\n'), function parser(line) {
-        i = line.indexOf(':');
-        key = utils.trim(line.substr(0, i)).toLowerCase();
-        val = utils.trim(line.substr(i + 1));
-
-        if (key) {
-          if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-            return;
-          }
-          if (key === 'set-cookie') {
-            parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-          } else {
-            parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
-          }
-        }
-      });
-
-      return parsed;
-    };
-
-    var isURLSameOrigin = (
-      utils.isStandardBrowserEnv() ?
-
-      // Standard browser envs have full support of the APIs needed to test
-      // whether the request URL is of the same origin as current location.
-        (function standardBrowserEnv() {
-          var msie = /(msie|trident)/i.test(navigator.userAgent);
-          var urlParsingNode = document.createElement('a');
-          var originURL;
-
-          /**
-        * Parse a URL to discover it's components
-        *
-        * @param {String} url The URL to be parsed
-        * @returns {Object}
-        */
-          function resolveURL(url) {
-            var href = url;
-
-            if (msie) {
-            // IE needs attribute set twice to normalize properties
-              urlParsingNode.setAttribute('href', href);
-              href = urlParsingNode.href;
-            }
-
-            urlParsingNode.setAttribute('href', href);
-
-            // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-            return {
-              href: urlParsingNode.href,
-              protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-              host: urlParsingNode.host,
-              search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-              hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-              hostname: urlParsingNode.hostname,
-              port: urlParsingNode.port,
-              pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-                urlParsingNode.pathname :
-                '/' + urlParsingNode.pathname
-            };
-          }
-
-          originURL = resolveURL(window.location.href);
-
-          /**
-        * Determine if a URL shares the same origin as the current location
-        *
-        * @param {String} requestURL The URL to test
-        * @returns {boolean} True if URL shares the same origin, otherwise false
-        */
-          return function isURLSameOrigin(requestURL) {
-            var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-            return (parsed.protocol === originURL.protocol &&
-                parsed.host === originURL.host);
-          };
-        })() :
-
-      // Non standard browser envs (web workers, react-native) lack needed support.
-        (function nonStandardBrowserEnv() {
-          return function isURLSameOrigin() {
-            return true;
-          };
-        })()
-    );
-
-    var xhr = function xhrAdapter(config) {
-      return new Promise(function dispatchXhrRequest(resolve, reject) {
-        var requestData = config.data;
-        var requestHeaders = config.headers;
-
-        if (utils.isFormData(requestData)) {
-          delete requestHeaders['Content-Type']; // Let the browser set it
-        }
-
-        var request = new XMLHttpRequest();
-
-        // HTTP basic authentication
-        if (config.auth) {
-          var username = config.auth.username || '';
-          var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
-          requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
-        }
-
-        var fullPath = buildFullPath(config.baseURL, config.url);
-        request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
-
-        // Set the request timeout in MS
-        request.timeout = config.timeout;
-
-        // Listen for ready state
-        request.onreadystatechange = function handleLoad() {
-          if (!request || request.readyState !== 4) {
-            return;
-          }
-
-          // The request errored out and we didn't get a response, this will be
-          // handled by onerror instead
-          // With one exception: request that using file: protocol, most browsers
-          // will return status as 0 even though it's a successful request
-          if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-            return;
-          }
-
-          // Prepare the response
-          var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-          var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
-          var response = {
-            data: responseData,
-            status: request.status,
-            statusText: request.statusText,
-            headers: responseHeaders,
-            config: config,
-            request: request
-          };
-
-          settle(resolve, reject, response);
-
-          // Clean up request
-          request = null;
-        };
-
-        // Handle browser request cancellation (as opposed to a manual cancellation)
-        request.onabort = function handleAbort() {
-          if (!request) {
-            return;
-          }
-
-          reject(createError('Request aborted', config, 'ECONNABORTED', request));
-
-          // Clean up request
-          request = null;
-        };
-
-        // Handle low level network errors
-        request.onerror = function handleError() {
-          // Real errors are hidden from us by the browser
-          // onerror should only fire if it's a network error
-          reject(createError('Network Error', config, null, request));
-
-          // Clean up request
-          request = null;
-        };
-
-        // Handle timeout
-        request.ontimeout = function handleTimeout() {
-          var timeoutErrorMessage = 'timeout of ' + config.timeout + 'ms exceeded';
-          if (config.timeoutErrorMessage) {
-            timeoutErrorMessage = config.timeoutErrorMessage;
-          }
-          reject(createError(timeoutErrorMessage, config, 'ECONNABORTED',
-            request));
-
-          // Clean up request
-          request = null;
-        };
-
-        // Add xsrf header
-        // This is only done if running in a standard browser environment.
-        // Specifically not if we're in a web worker, or react-native.
-        if (utils.isStandardBrowserEnv()) {
-          // Add xsrf header
-          var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
-            cookies.read(config.xsrfCookieName) :
-            undefined;
-
-          if (xsrfValue) {
-            requestHeaders[config.xsrfHeaderName] = xsrfValue;
-          }
-        }
-
-        // Add headers to the request
-        if ('setRequestHeader' in request) {
-          utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-            if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-              // Remove Content-Type if data is undefined
-              delete requestHeaders[key];
-            } else {
-              // Otherwise add header to the request
-              request.setRequestHeader(key, val);
-            }
-          });
-        }
-
-        // Add withCredentials to request if needed
-        if (!utils.isUndefined(config.withCredentials)) {
-          request.withCredentials = !!config.withCredentials;
-        }
-
-        // Add responseType to request if needed
-        if (config.responseType) {
-          try {
-            request.responseType = config.responseType;
-          } catch (e) {
-            // Expected DOMException thrown by browsers not compatible XMLHttpRequest Level 2.
-            // But, this can be suppressed for 'json' type as it can be parsed by default 'transformResponse' function.
-            if (config.responseType !== 'json') {
-              throw e;
-            }
-          }
-        }
-
-        // Handle progress if needed
-        if (typeof config.onDownloadProgress === 'function') {
-          request.addEventListener('progress', config.onDownloadProgress);
-        }
-
-        // Not all browsers support upload events
-        if (typeof config.onUploadProgress === 'function' && request.upload) {
-          request.upload.addEventListener('progress', config.onUploadProgress);
-        }
-
-        if (config.cancelToken) {
-          // Handle cancellation
-          config.cancelToken.promise.then(function onCanceled(cancel) {
-            if (!request) {
-              return;
-            }
-
-            request.abort();
-            reject(cancel);
-            // Clean up request
-            request = null;
-          });
-        }
-
-        if (!requestData) {
-          requestData = null;
-        }
-
-        // Send the request
-        request.send(requestData);
-      });
-    };
-
-    var DEFAULT_CONTENT_TYPE = {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    };
-
-    function setContentTypeIfUnset(headers, value) {
-      if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-        headers['Content-Type'] = value;
-      }
-    }
-
-    function getDefaultAdapter() {
-      var adapter;
-      if (typeof XMLHttpRequest !== 'undefined') {
-        // For browsers use XHR adapter
-        adapter = xhr;
-      } else if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
-        // For node use HTTP adapter
-        adapter = xhr;
-      }
-      return adapter;
-    }
-
-    var defaults = {
-      adapter: getDefaultAdapter(),
-
-      transformRequest: [function transformRequest(data, headers) {
-        normalizeHeaderName(headers, 'Accept');
-        normalizeHeaderName(headers, 'Content-Type');
-        if (utils.isFormData(data) ||
-          utils.isArrayBuffer(data) ||
-          utils.isBuffer(data) ||
-          utils.isStream(data) ||
-          utils.isFile(data) ||
-          utils.isBlob(data)
-        ) {
-          return data;
-        }
-        if (utils.isArrayBufferView(data)) {
-          return data.buffer;
-        }
-        if (utils.isURLSearchParams(data)) {
-          setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-          return data.toString();
-        }
-        if (utils.isObject(data)) {
-          setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
-          return JSON.stringify(data);
-        }
-        return data;
-      }],
-
-      transformResponse: [function transformResponse(data) {
-        /*eslint no-param-reassign:0*/
-        if (typeof data === 'string') {
-          try {
-            data = JSON.parse(data);
-          } catch (e) { /* Ignore */ }
-        }
-        return data;
-      }],
-
-      /**
-       * A timeout in milliseconds to abort a request. If set to 0 (default) a
-       * timeout is not created.
-       */
-      timeout: 0,
-
-      xsrfCookieName: 'XSRF-TOKEN',
-      xsrfHeaderName: 'X-XSRF-TOKEN',
-
-      maxContentLength: -1,
-      maxBodyLength: -1,
-
-      validateStatus: function validateStatus(status) {
-        return status >= 200 && status < 300;
-      }
-    };
-
-    defaults.headers = {
-      common: {
-        'Accept': 'application/json, text/plain, */*'
-      }
-    };
-
-    utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-      defaults.headers[method] = {};
-    });
-
-    utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-      defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-    });
-
-    var defaults_1 = defaults;
-
-    /**
-     * Throws a `Cancel` if cancellation has been requested.
-     */
-    function throwIfCancellationRequested(config) {
-      if (config.cancelToken) {
-        config.cancelToken.throwIfRequested();
-      }
-    }
-
-    /**
-     * Dispatch a request to the server using the configured adapter.
-     *
-     * @param {object} config The config that is to be used for the request
-     * @returns {Promise} The Promise to be fulfilled
-     */
-    var dispatchRequest = function dispatchRequest(config) {
-      throwIfCancellationRequested(config);
-
-      // Ensure headers exist
-      config.headers = config.headers || {};
-
-      // Transform request data
-      config.data = transformData(
-        config.data,
-        config.headers,
-        config.transformRequest
-      );
-
-      // Flatten headers
-      config.headers = utils.merge(
-        config.headers.common || {},
-        config.headers[config.method] || {},
-        config.headers
-      );
-
-      utils.forEach(
-        ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
-        function cleanHeaderConfig(method) {
-          delete config.headers[method];
-        }
-      );
-
-      var adapter = config.adapter || defaults_1.adapter;
-
-      return adapter(config).then(function onAdapterResolution(response) {
-        throwIfCancellationRequested(config);
-
-        // Transform response data
-        response.data = transformData(
-          response.data,
-          response.headers,
-          config.transformResponse
-        );
-
-        return response;
-      }, function onAdapterRejection(reason) {
-        if (!isCancel(reason)) {
-          throwIfCancellationRequested(config);
-
-          // Transform response data
-          if (reason && reason.response) {
-            reason.response.data = transformData(
-              reason.response.data,
-              reason.response.headers,
-              config.transformResponse
-            );
-          }
-        }
-
-        return Promise.reject(reason);
-      });
-    };
-
-    /**
-     * Config-specific merge-function which creates a new config-object
-     * by merging two configuration objects together.
-     *
-     * @param {Object} config1
-     * @param {Object} config2
-     * @returns {Object} New object resulting from merging config2 to config1
-     */
-    var mergeConfig = function mergeConfig(config1, config2) {
-      // eslint-disable-next-line no-param-reassign
-      config2 = config2 || {};
-      var config = {};
-
-      var valueFromConfig2Keys = ['url', 'method', 'data'];
-      var mergeDeepPropertiesKeys = ['headers', 'auth', 'proxy', 'params'];
-      var defaultToConfig2Keys = [
-        'baseURL', 'transformRequest', 'transformResponse', 'paramsSerializer',
-        'timeout', 'timeoutMessage', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
-        'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'decompress',
-        'maxContentLength', 'maxBodyLength', 'maxRedirects', 'transport', 'httpAgent',
-        'httpsAgent', 'cancelToken', 'socketPath', 'responseEncoding'
-      ];
-      var directMergeKeys = ['validateStatus'];
-
-      function getMergedValue(target, source) {
-        if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
-          return utils.merge(target, source);
-        } else if (utils.isPlainObject(source)) {
-          return utils.merge({}, source);
-        } else if (utils.isArray(source)) {
-          return source.slice();
-        }
-        return source;
-      }
-
-      function mergeDeepProperties(prop) {
-        if (!utils.isUndefined(config2[prop])) {
-          config[prop] = getMergedValue(config1[prop], config2[prop]);
-        } else if (!utils.isUndefined(config1[prop])) {
-          config[prop] = getMergedValue(undefined, config1[prop]);
-        }
-      }
-
-      utils.forEach(valueFromConfig2Keys, function valueFromConfig2(prop) {
-        if (!utils.isUndefined(config2[prop])) {
-          config[prop] = getMergedValue(undefined, config2[prop]);
-        }
-      });
-
-      utils.forEach(mergeDeepPropertiesKeys, mergeDeepProperties);
-
-      utils.forEach(defaultToConfig2Keys, function defaultToConfig2(prop) {
-        if (!utils.isUndefined(config2[prop])) {
-          config[prop] = getMergedValue(undefined, config2[prop]);
-        } else if (!utils.isUndefined(config1[prop])) {
-          config[prop] = getMergedValue(undefined, config1[prop]);
-        }
-      });
-
-      utils.forEach(directMergeKeys, function merge(prop) {
-        if (prop in config2) {
-          config[prop] = getMergedValue(config1[prop], config2[prop]);
-        } else if (prop in config1) {
-          config[prop] = getMergedValue(undefined, config1[prop]);
-        }
-      });
-
-      var axiosKeys = valueFromConfig2Keys
-        .concat(mergeDeepPropertiesKeys)
-        .concat(defaultToConfig2Keys)
-        .concat(directMergeKeys);
-
-      var otherKeys = Object
-        .keys(config1)
-        .concat(Object.keys(config2))
-        .filter(function filterAxiosKeys(key) {
-          return axiosKeys.indexOf(key) === -1;
-        });
-
-      utils.forEach(otherKeys, mergeDeepProperties);
-
-      return config;
-    };
-
-    /**
-     * Create a new instance of Axios
-     *
-     * @param {Object} instanceConfig The default config for the instance
-     */
-    function Axios(instanceConfig) {
-      this.defaults = instanceConfig;
-      this.interceptors = {
-        request: new InterceptorManager_1(),
-        response: new InterceptorManager_1()
-      };
-    }
-
-    /**
-     * Dispatch a request
-     *
-     * @param {Object} config The config specific for this request (merged with this.defaults)
-     */
-    Axios.prototype.request = function request(config) {
-      /*eslint no-param-reassign:0*/
-      // Allow for axios('example/url'[, config]) a la fetch API
-      if (typeof config === 'string') {
-        config = arguments[1] || {};
-        config.url = arguments[0];
-      } else {
-        config = config || {};
-      }
-
-      config = mergeConfig(this.defaults, config);
-
-      // Set config.method
-      if (config.method) {
-        config.method = config.method.toLowerCase();
-      } else if (this.defaults.method) {
-        config.method = this.defaults.method.toLowerCase();
-      } else {
-        config.method = 'get';
-      }
-
-      // Hook up interceptors middleware
-      var chain = [dispatchRequest, undefined];
-      var promise = Promise.resolve(config);
-
-      this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-        chain.unshift(interceptor.fulfilled, interceptor.rejected);
-      });
-
-      this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-        chain.push(interceptor.fulfilled, interceptor.rejected);
-      });
-
-      while (chain.length) {
-        promise = promise.then(chain.shift(), chain.shift());
-      }
-
-      return promise;
-    };
-
-    Axios.prototype.getUri = function getUri(config) {
-      config = mergeConfig(this.defaults, config);
-      return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, '');
-    };
-
-    // Provide aliases for supported request methods
-    utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
-      /*eslint func-names:0*/
-      Axios.prototype[method] = function(url, config) {
-        return this.request(mergeConfig(config || {}, {
-          method: method,
-          url: url,
-          data: (config || {}).data
-        }));
-      };
-    });
-
-    utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-      /*eslint func-names:0*/
-      Axios.prototype[method] = function(url, data, config) {
-        return this.request(mergeConfig(config || {}, {
-          method: method,
-          url: url,
-          data: data
-        }));
-      };
-    });
-
-    var Axios_1 = Axios;
-
-    /**
-     * A `Cancel` is an object that is thrown when an operation is canceled.
-     *
-     * @class
-     * @param {string=} message The message.
-     */
-    function Cancel(message) {
-      this.message = message;
-    }
-
-    Cancel.prototype.toString = function toString() {
-      return 'Cancel' + (this.message ? ': ' + this.message : '');
-    };
-
-    Cancel.prototype.__CANCEL__ = true;
-
-    var Cancel_1 = Cancel;
-
-    /**
-     * A `CancelToken` is an object that can be used to request cancellation of an operation.
-     *
-     * @class
-     * @param {Function} executor The executor function.
-     */
-    function CancelToken(executor) {
-      if (typeof executor !== 'function') {
-        throw new TypeError('executor must be a function.');
-      }
-
-      var resolvePromise;
-      this.promise = new Promise(function promiseExecutor(resolve) {
-        resolvePromise = resolve;
-      });
-
-      var token = this;
-      executor(function cancel(message) {
-        if (token.reason) {
-          // Cancellation has already been requested
-          return;
-        }
-
-        token.reason = new Cancel_1(message);
-        resolvePromise(token.reason);
-      });
-    }
-
-    /**
-     * Throws a `Cancel` if cancellation has been requested.
-     */
-    CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-      if (this.reason) {
-        throw this.reason;
-      }
-    };
-
-    /**
-     * Returns an object that contains a new `CancelToken` and a function that, when called,
-     * cancels the `CancelToken`.
-     */
-    CancelToken.source = function source() {
-      var cancel;
-      var token = new CancelToken(function executor(c) {
-        cancel = c;
-      });
-      return {
-        token: token,
-        cancel: cancel
-      };
-    };
-
-    var CancelToken_1 = CancelToken;
-
-    /**
-     * Syntactic sugar for invoking a function and expanding an array for arguments.
-     *
-     * Common use case would be to use `Function.prototype.apply`.
-     *
-     *  ```js
-     *  function f(x, y, z) {}
-     *  var args = [1, 2, 3];
-     *  f.apply(null, args);
-     *  ```
-     *
-     * With `spread` this example can be re-written.
-     *
-     *  ```js
-     *  spread(function(x, y, z) {})([1, 2, 3]);
-     *  ```
-     *
-     * @param {Function} callback
-     * @returns {Function}
-     */
-    var spread = function spread(callback) {
-      return function wrap(arr) {
-        return callback.apply(null, arr);
-      };
-    };
-
-    /**
-     * Determines whether the payload is an error thrown by Axios
-     *
-     * @param {*} payload The value to test
-     * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
-     */
-    var isAxiosError = function isAxiosError(payload) {
-      return (typeof payload === 'object') && (payload.isAxiosError === true);
-    };
-
-    /**
-     * Create an instance of Axios
-     *
-     * @param {Object} defaultConfig The default config for the instance
-     * @return {Axios} A new instance of Axios
-     */
-    function createInstance(defaultConfig) {
-      var context = new Axios_1(defaultConfig);
-      var instance = bind(Axios_1.prototype.request, context);
-
-      // Copy axios.prototype to instance
-      utils.extend(instance, Axios_1.prototype, context);
-
-      // Copy context to instance
-      utils.extend(instance, context);
-
-      return instance;
-    }
-
-    // Create the default instance to be exported
-    var axios$1 = createInstance(defaults_1);
-
-    // Expose Axios class to allow class inheritance
-    axios$1.Axios = Axios_1;
-
-    // Factory for creating new instances
-    axios$1.create = function create(instanceConfig) {
-      return createInstance(mergeConfig(axios$1.defaults, instanceConfig));
-    };
-
-    // Expose Cancel & CancelToken
-    axios$1.Cancel = Cancel_1;
-    axios$1.CancelToken = CancelToken_1;
-    axios$1.isCancel = isCancel;
-
-    // Expose all/spread
-    axios$1.all = function all(promises) {
-      return Promise.all(promises);
-    };
-    axios$1.spread = spread;
-
-    // Expose isAxiosError
-    axios$1.isAxiosError = isAxiosError;
-
-    var axios_1 = axios$1;
-
-    // Allow use of default import syntax in TypeScript
-    var _default = axios$1;
-    axios_1.default = _default;
-
-    var axios = axios_1;
-
     /* src/components/ui/Icon.svelte generated by Svelte v3.37.0 */
 
-    const file$2 = "src/components/ui/Icon.svelte";
+    const file$4 = "src/components/ui/Icon.svelte";
 
-    function create_fragment$2(ctx) {
+    function create_fragment$4(ctx) {
     	let svg;
     	let use;
     	let use_xlink_href_value;
@@ -1853,10 +396,10 @@
     		c: function create() {
     			svg = svg_element("svg");
     			use = svg_element("use");
-    			xlink_attr(use, "xlink:href", use_xlink_href_value = `/home/moodle/my/frontend/bundle.svg#${/*name*/ ctx[0]}`);
-    			add_location(use, file$2, 5, 1, 69);
+    			xlink_attr(use, "xlink:href", use_xlink_href_value = `/bundle.svg#${/*name*/ ctx[0]}`);
+    			add_location(use, file$4, 5, 1, 69);
     			attr_dev(svg, "class", "inline-svg-icon svelte-12xj3l5");
-    			add_location(svg, file$2, 4, 0, 38);
+    			add_location(svg, file$4, 4, 0, 38);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1866,7 +409,7 @@
     			append_dev(svg, use);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*name*/ 1 && use_xlink_href_value !== (use_xlink_href_value = `/home/moodle/my/frontend/bundle.svg#${/*name*/ ctx[0]}`)) {
+    			if (dirty & /*name*/ 1 && use_xlink_href_value !== (use_xlink_href_value = `/bundle.svg#${/*name*/ ctx[0]}`)) {
     				xlink_attr(use, "xlink:href", use_xlink_href_value);
     			}
     		},
@@ -1879,7 +422,7 @@
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$2.name,
+    		id: create_fragment$4.name,
     		type: "component",
     		source: "",
     		ctx
@@ -1888,7 +431,7 @@
     	return block;
     }
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$4($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Icon", slots, []);
     	let { name } = $$props;
@@ -1918,13 +461,13 @@
     class Icon extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, { name: 0 });
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { name: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Icon",
     			options,
-    			id: create_fragment$2.name
+    			id: create_fragment$4.name
     		});
 
     		const { ctx } = this.$$;
@@ -1944,8 +487,149 @@
     	}
     }
 
+    /* src/components/User.svelte generated by Svelte v3.37.0 */
+    const file$3 = "src/components/User.svelte";
+
+    function create_fragment$3(ctx) {
+    	let div4;
+    	let div0;
+    	let img;
+    	let img_src_value;
+    	let t0;
+    	let span0;
+    	let t2;
+    	let div1;
+    	let span1;
+    	let t4;
+    	let span2;
+    	let t6;
+    	let div3;
+    	let div2;
+    	let icon;
+    	let t7;
+    	let span3;
+    	let current;
+    	icon = new Icon({ props: { name: "coins" }, $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			div4 = element("div");
+    			div0 = element("div");
+    			img = element("img");
+    			t0 = space();
+    			span0 = element("span");
+    			span0.textContent = "Ищенко Александр";
+    			t2 = space();
+    			div1 = element("div");
+    			span1 = element("span");
+    			span1.textContent = "Команда";
+    			t4 = space();
+    			span2 = element("span");
+    			span2.textContent = "Синяя";
+    			t6 = space();
+    			div3 = element("div");
+    			div2 = element("div");
+    			create_component(icon.$$.fragment);
+    			t7 = space();
+    			span3 = element("span");
+    			span3.textContent = "54";
+    			if (img.src !== (img_src_value = "https://2.bp.blogspot.com/-SYZeEKXWltA/W_F8zblq64I/AAAAAAAABec/c9L0mbjGgcYoFfnD6V1Zpd6gK-VhxzSWwCLcBGAs/w1200-h630-p-k-no-nu/rect1313.png")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", "");
+    			attr_dev(img, "class", "svelte-1b0sx3n");
+    			add_location(img, file$3, 6, 2, 89);
+    			attr_dev(div0, "class", "picture svelte-1b0sx3n");
+    			add_location(div0, file$3, 5, 1, 65);
+    			attr_dev(span0, "class", "name");
+    			add_location(span0, file$3, 12, 1, 266);
+    			add_location(span1, file$3, 15, 2, 332);
+    			add_location(span2, file$3, 16, 2, 355);
+    			attr_dev(div1, "class", "team");
+    			add_location(div1, file$3, 14, 1, 311);
+    			attr_dev(div2, "class", "count");
+    			add_location(div2, file$3, 20, 2, 406);
+    			add_location(span3, file$3, 24, 2, 463);
+    			attr_dev(div3, "class", "coins");
+    			add_location(div3, file$3, 19, 1, 384);
+    			add_location(div4, file$3, 4, 0, 58);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, div0);
+    			append_dev(div0, img);
+    			append_dev(div4, t0);
+    			append_dev(div4, span0);
+    			append_dev(div4, t2);
+    			append_dev(div4, div1);
+    			append_dev(div1, span1);
+    			append_dev(div1, t4);
+    			append_dev(div1, span2);
+    			append_dev(div4, t6);
+    			append_dev(div4, div3);
+    			append_dev(div3, div2);
+    			mount_component(icon, div2, null);
+    			append_dev(div3, t7);
+    			append_dev(div3, span3);
+    			current = true;
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(icon.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(icon.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div4);
+    			destroy_component(icon);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("User", slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<User> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({ Icon });
+    	return [];
+    }
+
+    class User extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "User",
+    			options,
+    			id: create_fragment$3.name
+    		});
+    	}
+    }
+
     /* src/components/Header.svelte generated by Svelte v3.37.0 */
-    const file$1 = "src/components/Header.svelte";
+    const file$2 = "src/components/Header.svelte";
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
@@ -1954,7 +638,7 @@
     	return child_ctx;
     }
 
-    // (15:1) {#each headers as { icon, label }}
+    // (19:2) {#each headers as { icon, label }}
     function create_each_block(ctx) {
     	let div;
     	let icon;
@@ -1984,11 +668,11 @@
     			span = element("span");
     			t1 = text(t1_value);
     			t2 = space();
-    			attr_dev(span, "class", "svelte-15kn6cr");
-    			add_location(span, file$1, 23, 3, 475);
-    			attr_dev(div, "class", "item " + /*icon*/ ctx[3] + " svelte-15kn6cr");
+    			attr_dev(span, "class", "svelte-67naci");
+    			add_location(span, file$2, 27, 4, 552);
+    			attr_dev(div, "class", "item " + /*icon*/ ctx[3] + " svelte-67naci");
     			toggle_class(div, "active", /*active*/ ctx[0] === /*icon*/ ctx[3]);
-    			add_location(div, file$1, 15, 2, 336);
+    			add_location(div, file$2, 19, 3, 405);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2032,16 +716,20 @@
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(15:1) {#each headers as { icon, label }}",
+    		source: "(19:2) {#each headers as { icon, label }}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$1(ctx) {
-    	let div;
+    function create_fragment$2(ctx) {
+    	let div1;
+    	let user;
+    	let t;
+    	let div0;
     	let current;
+    	user = new User({ $$inline: true });
     	let each_value = /*headers*/ ctx[1];
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -2056,23 +744,31 @@
 
     	const block = {
     		c: function create() {
-    			div = element("div");
+    			div1 = element("div");
+    			create_component(user.$$.fragment);
+    			t = space();
+    			div0 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div, "class", "header svelte-15kn6cr");
-    			add_location(div, file$1, 13, 0, 277);
+    			attr_dev(div0, "class", "items svelte-67naci");
+    			add_location(div0, file$2, 17, 1, 345);
+    			attr_dev(div1, "class", "header svelte-67naci");
+    			add_location(div1, file$2, 14, 0, 312);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
+    			insert_dev(target, div1, anchor);
+    			mount_component(user, div1, null);
+    			append_dev(div1, t);
+    			append_dev(div1, div0);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div, null);
+    				each_blocks[i].m(div0, null);
     			}
 
     			current = true;
@@ -2093,7 +789,7 @@
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(div, null);
+    						each_blocks[i].m(div0, null);
     					}
     				}
 
@@ -2108,6 +804,7 @@
     		},
     		i: function intro(local) {
     			if (current) return;
+    			transition_in(user.$$.fragment, local);
 
     			for (let i = 0; i < each_value.length; i += 1) {
     				transition_in(each_blocks[i]);
@@ -2116,6 +813,7 @@
     			current = true;
     		},
     		o: function outro(local) {
+    			transition_out(user.$$.fragment, local);
     			each_blocks = each_blocks.filter(Boolean);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -2125,14 +823,15 @@
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div1);
+    			destroy_component(user);
     			destroy_each(each_blocks, detaching);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$1.name,
+    		id: create_fragment$2.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2141,7 +840,7 @@
     	return block;
     }
 
-    function instance$1($$self, $$props, $$invalidate) {
+    function instance$2($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Header", slots, []);
     	let { active = "map" } = $$props;
@@ -2167,7 +866,7 @@
     		if ("active" in $$props) $$invalidate(0, active = $$props.active);
     	};
 
-    	$$self.$capture_state = () => ({ Icon, active, headers });
+    	$$self.$capture_state = () => ({ Icon, User, active, headers });
 
     	$$self.$inject_state = $$props => {
     		if ("active" in $$props) $$invalidate(0, active = $$props.active);
@@ -2183,13 +882,13 @@
     class Header extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { active: 0 });
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, { active: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Header",
     			options,
-    			id: create_fragment$1.name
+    			id: create_fragment$2.name
     		});
     	}
 
@@ -2202,15 +901,325 @@
     	}
     }
 
+    /* src/components/Dice.svelte generated by Svelte v3.37.0 */
+
+    const file$1 = "src/components/Dice.svelte";
+
+    function create_fragment$1(ctx) {
+    	let div;
+    	let ol;
+    	let li0;
+    	let span0;
+    	let t0;
+    	let li1;
+    	let span1;
+    	let t1;
+    	let span2;
+    	let t2;
+    	let li2;
+    	let span3;
+    	let t3;
+    	let span4;
+    	let t4;
+    	let span5;
+    	let t5;
+    	let li3;
+    	let span6;
+    	let t6;
+    	let span7;
+    	let t7;
+    	let span8;
+    	let t8;
+    	let span9;
+    	let t9;
+    	let li4;
+    	let span10;
+    	let t10;
+    	let span11;
+    	let t11;
+    	let span12;
+    	let t12;
+    	let span13;
+    	let t13;
+    	let span14;
+    	let t14;
+    	let li5;
+    	let span15;
+    	let t15;
+    	let span16;
+    	let t16;
+    	let span17;
+    	let t17;
+    	let span18;
+    	let t18;
+    	let span19;
+    	let t19;
+    	let span20;
+    	let t20;
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			ol = element("ol");
+    			li0 = element("li");
+    			span0 = element("span");
+    			t0 = space();
+    			li1 = element("li");
+    			span1 = element("span");
+    			t1 = space();
+    			span2 = element("span");
+    			t2 = space();
+    			li2 = element("li");
+    			span3 = element("span");
+    			t3 = space();
+    			span4 = element("span");
+    			t4 = space();
+    			span5 = element("span");
+    			t5 = space();
+    			li3 = element("li");
+    			span6 = element("span");
+    			t6 = space();
+    			span7 = element("span");
+    			t7 = space();
+    			span8 = element("span");
+    			t8 = space();
+    			span9 = element("span");
+    			t9 = space();
+    			li4 = element("li");
+    			span10 = element("span");
+    			t10 = space();
+    			span11 = element("span");
+    			t11 = space();
+    			span12 = element("span");
+    			t12 = space();
+    			span13 = element("span");
+    			t13 = space();
+    			span14 = element("span");
+    			t14 = space();
+    			li5 = element("li");
+    			span15 = element("span");
+    			t15 = space();
+    			span16 = element("span");
+    			t16 = space();
+    			span17 = element("span");
+    			t17 = space();
+    			span18 = element("span");
+    			t18 = space();
+    			span19 = element("span");
+    			t19 = space();
+    			span20 = element("span");
+    			t20 = space();
+    			button = element("button");
+    			button.textContent = "Вращать";
+    			attr_dev(span0, "class", "dot svelte-14zrlfb");
+    			add_location(span0, file$1, 23, 3, 512);
+    			attr_dev(li0, "class", "die-item svelte-14zrlfb");
+    			attr_dev(li0, "data-side", "1");
+    			add_location(li0, file$1, 22, 2, 473);
+    			attr_dev(span1, "class", "dot svelte-14zrlfb");
+    			add_location(span1, file$1, 26, 3, 582);
+    			attr_dev(span2, "class", "dot svelte-14zrlfb");
+    			add_location(span2, file$1, 27, 3, 606);
+    			attr_dev(li1, "class", "die-item svelte-14zrlfb");
+    			attr_dev(li1, "data-side", "2");
+    			add_location(li1, file$1, 25, 2, 543);
+    			attr_dev(span3, "class", "dot svelte-14zrlfb");
+    			add_location(span3, file$1, 30, 3, 676);
+    			attr_dev(span4, "class", "dot svelte-14zrlfb");
+    			add_location(span4, file$1, 31, 3, 700);
+    			attr_dev(span5, "class", "dot svelte-14zrlfb");
+    			add_location(span5, file$1, 32, 3, 724);
+    			attr_dev(li2, "class", "die-item svelte-14zrlfb");
+    			attr_dev(li2, "data-side", "3");
+    			add_location(li2, file$1, 29, 2, 637);
+    			attr_dev(span6, "class", "dot svelte-14zrlfb");
+    			add_location(span6, file$1, 35, 3, 794);
+    			attr_dev(span7, "class", "dot svelte-14zrlfb");
+    			add_location(span7, file$1, 36, 3, 818);
+    			attr_dev(span8, "class", "dot svelte-14zrlfb");
+    			add_location(span8, file$1, 37, 3, 842);
+    			attr_dev(span9, "class", "dot svelte-14zrlfb");
+    			add_location(span9, file$1, 38, 3, 866);
+    			attr_dev(li3, "class", "die-item svelte-14zrlfb");
+    			attr_dev(li3, "data-side", "4");
+    			add_location(li3, file$1, 34, 2, 755);
+    			attr_dev(span10, "class", "dot svelte-14zrlfb");
+    			add_location(span10, file$1, 41, 3, 936);
+    			attr_dev(span11, "class", "dot svelte-14zrlfb");
+    			add_location(span11, file$1, 42, 3, 960);
+    			attr_dev(span12, "class", "dot svelte-14zrlfb");
+    			add_location(span12, file$1, 43, 3, 984);
+    			attr_dev(span13, "class", "dot svelte-14zrlfb");
+    			add_location(span13, file$1, 44, 3, 1008);
+    			attr_dev(span14, "class", "dot svelte-14zrlfb");
+    			add_location(span14, file$1, 45, 3, 1032);
+    			attr_dev(li4, "class", "die-item svelte-14zrlfb");
+    			attr_dev(li4, "data-side", "5");
+    			add_location(li4, file$1, 40, 2, 897);
+    			attr_dev(span15, "class", "dot svelte-14zrlfb");
+    			add_location(span15, file$1, 48, 3, 1102);
+    			attr_dev(span16, "class", "dot svelte-14zrlfb");
+    			add_location(span16, file$1, 49, 3, 1126);
+    			attr_dev(span17, "class", "dot svelte-14zrlfb");
+    			add_location(span17, file$1, 50, 3, 1150);
+    			attr_dev(span18, "class", "dot svelte-14zrlfb");
+    			add_location(span18, file$1, 51, 3, 1174);
+    			attr_dev(span19, "class", "dot svelte-14zrlfb");
+    			add_location(span19, file$1, 52, 3, 1198);
+    			attr_dev(span20, "class", "dot svelte-14zrlfb");
+    			add_location(span20, file$1, 53, 3, 1222);
+    			attr_dev(li5, "class", "die-item svelte-14zrlfb");
+    			attr_dev(li5, "data-side", "6");
+    			add_location(li5, file$1, 47, 2, 1063);
+    			attr_dev(ol, "class", "die-list roll svelte-14zrlfb");
+    			add_location(ol, file$1, 21, 1, 444);
+    			attr_dev(button, "class", "svelte-14zrlfb");
+    			add_location(button, file$1, 57, 1, 1260);
+    			attr_dev(div, "class", "dice svelte-14zrlfb");
+    			add_location(div, file$1, 20, 0, 424);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, ol);
+    			append_dev(ol, li0);
+    			append_dev(li0, span0);
+    			append_dev(ol, t0);
+    			append_dev(ol, li1);
+    			append_dev(li1, span1);
+    			append_dev(li1, t1);
+    			append_dev(li1, span2);
+    			append_dev(ol, t2);
+    			append_dev(ol, li2);
+    			append_dev(li2, span3);
+    			append_dev(li2, t3);
+    			append_dev(li2, span4);
+    			append_dev(li2, t4);
+    			append_dev(li2, span5);
+    			append_dev(ol, t5);
+    			append_dev(ol, li3);
+    			append_dev(li3, span6);
+    			append_dev(li3, t6);
+    			append_dev(li3, span7);
+    			append_dev(li3, t7);
+    			append_dev(li3, span8);
+    			append_dev(li3, t8);
+    			append_dev(li3, span9);
+    			append_dev(ol, t9);
+    			append_dev(ol, li4);
+    			append_dev(li4, span10);
+    			append_dev(li4, t10);
+    			append_dev(li4, span11);
+    			append_dev(li4, t11);
+    			append_dev(li4, span12);
+    			append_dev(li4, t12);
+    			append_dev(li4, span13);
+    			append_dev(li4, t13);
+    			append_dev(li4, span14);
+    			append_dev(ol, t14);
+    			append_dev(ol, li5);
+    			append_dev(li5, span15);
+    			append_dev(li5, t15);
+    			append_dev(li5, span16);
+    			append_dev(li5, t16);
+    			append_dev(li5, span17);
+    			append_dev(li5, t17);
+    			append_dev(li5, span18);
+    			append_dev(li5, t18);
+    			append_dev(li5, span19);
+    			append_dev(li5, t19);
+    			append_dev(li5, span20);
+    			append_dev(div, t20);
+    			append_dev(div, button);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", rollDice, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function rollDice() {
+    	const dice = [...document.querySelectorAll(".die-list")];
+
+    	dice.forEach(die => {
+    		toggleClasses(die);
+    		die.dataset.roll = getRandomNumber(1, 6);
+    	});
+    }
+
+    function toggleClasses(die) {
+    	die.classList.toggle("roll");
+    }
+
+    function getRandomNumber(min, max) {
+    	min = Math.ceil(min);
+    	max = Math.floor(max);
+    	return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Dice", slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Dice> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({ rollDice, toggleClasses, getRandomNumber });
+    	return [];
+    }
+
+    class Dice extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Dice",
+    			options,
+    			id: create_fragment$1.name
+    		});
+    	}
+    }
+
     /* src/App.svelte generated by Svelte v3.37.0 */
     const file = "src/App.svelte";
 
     function create_fragment(ctx) {
     	let link0;
     	let link1;
-    	let t;
+    	let t0;
     	let main;
     	let header;
+    	let t1;
+    	let dice;
     	let current;
 
     	header = new Header({
@@ -2218,21 +1227,25 @@
     			$$inline: true
     		});
 
+    	dice = new Dice({ $$inline: true });
+
     	const block = {
     		c: function create() {
     			link0 = element("link");
     			link1 = element("link");
-    			t = space();
+    			t0 = space();
     			main = element("main");
     			create_component(header.$$.fragment);
+    			t1 = space();
+    			create_component(dice.$$.fragment);
     			attr_dev(link0, "rel", "preconnect");
     			attr_dev(link0, "href", "https://fonts.gstatic.com");
-    			add_location(link0, file, 8, 1, 135);
+    			add_location(link0, file, 8, 1, 153);
     			attr_dev(link1, "href", "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap");
     			attr_dev(link1, "rel", "stylesheet");
-    			add_location(link1, file, 9, 1, 195);
+    			add_location(link1, file, 9, 1, 213);
     			attr_dev(main, "class", "svelte-z0uk09");
-    			add_location(main, file, 15, 0, 331);
+    			add_location(main, file, 15, 0, 349);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2240,27 +1253,32 @@
     		m: function mount(target, anchor) {
     			append_dev(document.head, link0);
     			append_dev(document.head, link1);
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t0, anchor);
     			insert_dev(target, main, anchor);
     			mount_component(header, main, null);
+    			append_dev(main, t1);
+    			mount_component(dice, main, null);
     			current = true;
     		},
     		p: noop,
     		i: function intro(local) {
     			if (current) return;
     			transition_in(header.$$.fragment, local);
+    			transition_in(dice.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(header.$$.fragment, local);
+    			transition_out(dice.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			detach_dev(link0);
     			detach_dev(link1);
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(main);
     			destroy_component(header);
+    			destroy_component(dice);
     		}
     	};
 
@@ -2285,7 +1303,7 @@
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ axios, Header, active });
+    	$$self.$capture_state = () => ({ Header, Dice, active });
 
     	$$self.$inject_state = $$props => {
     		if ("active" in $$props) $$invalidate(0, active = $$props.active);

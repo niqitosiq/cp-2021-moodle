@@ -1,5 +1,6 @@
 <script>
 	import Icon from "./ui/Icon.svelte";
+	import User from "./User.svelte";
 
 	export let active = "map";
 
@@ -12,25 +13,38 @@
 </script>
 
 <div class="header">
-	{#each headers as { icon, label }}
-		<div
-			class="item {icon}"
-			class:active={active === icon}
-			on:click={() => {
-				active = icon;
-			}}
-		>
-			<Icon name={icon} />
-			<span>{label}</span>
-		</div>
-	{/each}
+	<User />
+
+	<div class="items">
+		{#each headers as { icon, label }}
+			<div
+				class="item {icon}"
+				class:active={active === icon}
+				on:click={() => {
+					active = icon;
+				}}
+			>
+				<Icon name={icon} />
+				<span>{label}</span>
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style lang="scss">
 	.header {
+		max-width: 1152px;
 		height: 88px;
 		display: flex;
-		align-items: stretch;
+		justify-content: space-between;
+		background: #ffffff;
+		border: 1px solid #e0e0e0;
+		border-radius: 65px;
+		padding: 20px 40px;
+		box-sizing: content-box;
+	}
+	.items {
+		display: flex;
 	}
 	.item {
 		width: 103px;
