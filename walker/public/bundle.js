@@ -149,6 +149,9 @@ var app = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
+    }
     function toggle_class(element, name, toggle) {
         element.classList[toggle ? 'add' : 'remove'](name);
     }
@@ -1660,7 +1663,7 @@ var app = (function () {
     	return block;
     }
 
-    function getRandomNumber(min, max) {
+    function getRandomNumber$1(min, max) {
     	min = Math.ceil(min);
     	max = Math.floor(max);
     	return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1698,7 +1701,7 @@ var app = (function () {
     		onMount,
     		random,
     		rollDice,
-    		getRandomNumber
+    		getRandomNumber: getRandomNumber$1
     	});
 
     	$$self.$inject_state = $$props => {
@@ -7104,12 +7107,13 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[1] = list[i].preview;
-    	child_ctx[2] = list[i].rare;
+    	child_ctx[3] = list[i].preview;
+    	child_ctx[4] = list[i].rare;
+    	child_ctx[6] = i;
     	return child_ctx;
     }
 
-    // (29:3) {#each items as { preview, rare }}
+    // (168:4) {#each items as { preview, rare }
     function create_each_block(ctx) {
     	let div;
     	let img;
@@ -7121,19 +7125,24 @@ var app = (function () {
     			div = element("div");
     			img = element("img");
     			t = space();
-    			if (img.src !== (img_src_value = /*preview*/ ctx[1])) attr_dev(img, "src", img_src_value);
+    			if (img.src !== (img_src_value = /*preview*/ ctx[3])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "");
-    			add_location(img, file$2, 30, 5, 963);
-    			attr_dev(div, "class", "item svelte-1t7zadt");
-    			toggle_class(div, "rare", /*rare*/ ctx[2]);
-    			add_location(div, file$2, 29, 4, 928);
+    			add_location(img, file$2, 169, 6, 5510);
+    			attr_dev(div, "class", "item svelte-1p7erjf");
+    			toggle_class(div, "active", /*index*/ ctx[6] === /*active*/ ctx[0]);
+    			toggle_class(div, "rare", /*rare*/ ctx[4]);
+    			add_location(div, file$2, 168, 5, 5442);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
     			append_dev(div, t);
     		},
-    		p: noop,
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*active*/ 1) {
+    				toggle_class(div, "active", /*index*/ ctx[6] === /*active*/ ctx[0]);
+    			}
+    		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     		}
@@ -7143,7 +7152,34 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(29:3) {#each items as { preview, rare }}",
+    		source: "(168:4) {#each items as { preview, rare }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (177:1) <Button on:click={roll}>
+    function create_default_slot$1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Крутить");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$1.name,
+    		type: "slot",
+    		source: "(177:1) <Button on:click={roll}>",
     		ctx
     	});
 
@@ -7151,19 +7187,24 @@ var app = (function () {
     }
 
     function create_fragment$2(ctx) {
+    	let div5;
+    	let h2;
+    	let t1;
     	let div4;
-    	let div3;
     	let div0;
     	let icon0;
-    	let t0;
+    	let t2;
     	let div1;
     	let icon1;
-    	let t1;
+    	let t3;
+    	let div3;
     	let div2;
+    	let t4;
+    	let button;
     	let current;
     	icon0 = new Icon({ props: { name: "arrow" }, $$inline: true });
     	icon1 = new Icon({ props: { name: "arrow" }, $$inline: true });
-    	let each_value = /*items*/ ctx[0];
+    	let each_value = /*items*/ ctx[1];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -7171,56 +7212,84 @@ var app = (function () {
     		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
 
+    	button = new Button({
+    			props: {
+    				$$slots: { default: [create_default_slot$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	button.$on("click", /*roll*/ ctx[2]);
+
     	const block = {
     		c: function create() {
+    			div5 = element("div");
+    			h2 = element("h2");
+    			h2.textContent = "Вы выиграли подарок 1-го ранга";
+    			t1 = space();
     			div4 = element("div");
-    			div3 = element("div");
     			div0 = element("div");
     			create_component(icon0.$$.fragment);
-    			t0 = space();
+    			t2 = space();
     			div1 = element("div");
     			create_component(icon1.$$.fragment);
-    			t1 = space();
+    			t3 = space();
+    			div3 = element("div");
     			div2 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div0, "class", "arrow top");
-    			add_location(div0, file$2, 21, 2, 743);
-    			attr_dev(div1, "class", "arrow bottom");
-    			add_location(div1, file$2, 24, 2, 803);
-    			attr_dev(div2, "class", "items");
-    			add_location(div2, file$2, 27, 2, 866);
-    			attr_dev(div3, "class", "active");
-    			add_location(div3, file$2, 20, 1, 720);
-    			attr_dev(div4, "class", "roll svelte-1t7zadt");
-    			add_location(div4, file$2, 19, 0, 700);
+    			t4 = space();
+    			create_component(button.$$.fragment);
+    			attr_dev(h2, "class", "svelte-1p7erjf");
+    			add_location(h2, file$2, 152, 1, 5052);
+    			attr_dev(div0, "class", "arrow top svelte-1p7erjf");
+    			add_location(div0, file$2, 155, 2, 5118);
+    			attr_dev(div1, "class", "arrow bottom svelte-1p7erjf");
+    			add_location(div1, file$2, 158, 2, 5178);
+    			attr_dev(div2, "id", "roll-items");
+    			attr_dev(div2, "class", "items svelte-1p7erjf");
+    			set_style(div2, "width", /*items*/ ctx[1].length * 150 + "px");
+    			set_style(div2, "transform", "translateX(-360px)");
+    			add_location(div2, file$2, 162, 3, 5270);
+    			attr_dev(div3, "class", "active-zone svelte-1p7erjf");
+    			add_location(div3, file$2, 161, 2, 5241);
+    			attr_dev(div4, "class", "wrapper svelte-1p7erjf");
+    			add_location(div4, file$2, 154, 1, 5094);
+    			attr_dev(div5, "class", "roll svelte-1p7erjf");
+    			add_location(div5, file$2, 151, 0, 5032);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div4, anchor);
-    			append_dev(div4, div3);
-    			append_dev(div3, div0);
+    			insert_dev(target, div5, anchor);
+    			append_dev(div5, h2);
+    			append_dev(div5, t1);
+    			append_dev(div5, div4);
+    			append_dev(div4, div0);
     			mount_component(icon0, div0, null);
-    			append_dev(div3, t0);
-    			append_dev(div3, div1);
+    			append_dev(div4, t2);
+    			append_dev(div4, div1);
     			mount_component(icon1, div1, null);
-    			append_dev(div3, t1);
+    			append_dev(div4, t3);
+    			append_dev(div4, div3);
     			append_dev(div3, div2);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div2, null);
     			}
 
+    			append_dev(div5, t4);
+    			mount_component(button, div5, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*items*/ 1) {
-    				each_value = /*items*/ ctx[0];
+    			if (dirty & /*active, items*/ 3) {
+    				each_value = /*items*/ ctx[1];
     				validate_each_argument(each_value);
     				let i;
 
@@ -7242,23 +7311,34 @@ var app = (function () {
 
     				each_blocks.length = each_value.length;
     			}
+
+    			const button_changes = {};
+
+    			if (dirty & /*$$scope*/ 128) {
+    				button_changes.$$scope = { dirty, ctx };
+    			}
+
+    			button.$set(button_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(icon0.$$.fragment, local);
     			transition_in(icon1.$$.fragment, local);
+    			transition_in(button.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(icon0.$$.fragment, local);
     			transition_out(icon1.$$.fragment, local);
+    			transition_out(button.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div4);
+    			if (detaching) detach_dev(div5);
     			destroy_component(icon0);
     			destroy_component(icon1);
     			destroy_each(each_blocks, detaching);
+    			destroy_component(button);
     		}
     	};
 
@@ -7273,13 +7353,20 @@ var app = (function () {
     	return block;
     }
 
+    function getRandomNumber(min, max) {
+    	min = Math.ceil(min);
+    	max = Math.floor(max);
+    	return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     function instance$2($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Roll", slots, []);
+    	let active = 2;
 
     	let items = [
     		{
-    			preview: "/my/assets/nikita.png",
+    			preview: "/my/assets/case_trans.png",
     			rare: true
     		},
     		{
@@ -7287,15 +7374,15 @@ var app = (function () {
     			rare: false
     		},
     		{
-    			preview: "/my/assets/pen.png",
+    			preview: "/my/assets/pen_trans.png",
     			rare: false
     		},
     		{
-    			preview: "/my/assets/cup.png",
+    			preview: "/my/assets/cup_trans.png",
     			rare: false
     		},
     		{
-    			preview: "/my/assets/nikita.png",
+    			preview: "/my/assets/case_trans.png",
     			rare: true
     		},
     		{
@@ -7303,15 +7390,15 @@ var app = (function () {
     			rare: false
     		},
     		{
-    			preview: "/my/assets/pen.png",
+    			preview: "/my/assets/pen_trans.png",
     			rare: false
     		},
     		{
-    			preview: "/my/assets/cup.png",
+    			preview: "/my/assets/cup_trans.png",
     			rare: false
     		},
     		{
-    			preview: "/my/assets/nikita.png",
+    			preview: "/my/assets/case_trans.png",
     			rare: true
     		},
     		{
@@ -7319,14 +7406,284 @@ var app = (function () {
     			rare: false
     		},
     		{
-    			preview: "/my/assets/pen.png",
+    			preview: "/my/assets/pen_trans.png",
     			rare: false
     		},
     		{
-    			preview: "/my/assets/cup.png",
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/case_trans.png",
+    			rare: true
+    		},
+    		{
+    			preview: "/my/assets/stickers.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/pen_trans.png",
+    			rare: false
+    		},
+    		{
+    			preview: "/my/assets/cup_trans.png",
     			rare: false
     		}
     	];
+
+    	function roll() {
+    		$$invalidate(0, active = getRandomNumber(0, items.length - 1));
+    		const tl = gsapWithCSS.timeline();
+    		tl.to("#roll-items", { x: "+=100px", duration: 0.5 }).to("#roll-items", { x: active * -180, duration: 2 });
+    	}
 
     	const writable_props = [];
 
@@ -7334,17 +7691,26 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Roll> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ Icon, items });
+    	$$self.$capture_state = () => ({
+    		Button,
+    		Icon,
+    		gsap: gsapWithCSS,
+    		active,
+    		items,
+    		getRandomNumber,
+    		roll
+    	});
 
     	$$self.$inject_state = $$props => {
-    		if ("items" in $$props) $$invalidate(0, items = $$props.items);
+    		if ("active" in $$props) $$invalidate(0, active = $$props.active);
+    		if ("items" in $$props) $$invalidate(1, items = $$props.items);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [items];
+    	return [active, items, roll];
     }
 
     class Roll extends SvelteComponentDev {
@@ -7496,7 +7862,7 @@ var app = (function () {
     			transition_in(roll.$$.fragment, local);
 
     			add_render_callback(() => {
-    				if (!div_transition) div_transition = create_bidirectional_transition(div, fade, { duration: 200 }, true);
+    				if (!div_transition) div_transition = create_bidirectional_transition(div, fade, { duration: 600 }, true);
     				div_transition.run(1);
     			});
 
@@ -7504,7 +7870,7 @@ var app = (function () {
     		},
     		o: function outro(local) {
     			transition_out(roll.$$.fragment, local);
-    			if (!div_transition) div_transition = create_bidirectional_transition(div, fade, { duration: 200 }, false);
+    			if (!div_transition) div_transition = create_bidirectional_transition(div, fade, { duration: 600 }, false);
     			div_transition.run(0);
     			current = false;
     		},

@@ -87,7 +87,7 @@
 		</div>
 	{/if}
 	{#if roulette}
-		<div class="roll" transition:fade={{ duration: 200 }}>
+		<div class="roll" transition:fade={{ duration: 600 }}>
 			<Roll bind:roulette />
 		</div>
 	{/if}
