@@ -7,19 +7,49 @@
 
 	onMount(() => {
 		const tl = gsap.timeline();
-		tl.to("#map", {
-			x: -400,
-			y: -200,
-			duration: 5,
-		}).to("#map", { x: 0, y: 0, duration: 5 });
+		tl.to(
+			"#map",
+			{
+				x: -700,
+				y: -300,
+				duration: 5,
+			},
+			"-=2"
+		)
+			.to(
+				"#map",
+				{
+					x: 400,
+					y: -300,
+					duration: 5,
+				},
+				"-=2"
+			)
+			.to("#map", { scale: 1, duration: 9, ease: "power2.out" }, "-=10");
 	});
 
 	let isRolled = false;
 
 	function rollDice() {
-		if (!isRolled) setTimeout(() => (isRolled = false), 5100);
+		if (!isRolled) setTimeout(() => (isRolled = false), 3000);
 		isRolled = true;
 	}
+
+	const points = [
+		{ x: 201, y: 163, type: "prize" },
+		{ y: 223, x: 261, type: "prize" },
+		{ y: 295, x: 301, type: "prize" },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+		// { y: , x:, type: 'prize' },
+	];
 </script>
 
 <div class="map-section">
@@ -33,7 +63,13 @@
 		</div>
 	{/if}
 	<div class="wrapper">
-		<img id="map" src="./city.svg" alt="" />
+		<div id="map">
+			<img src="./city.svg" alt="" />
+
+			{#each points as { x, y }}
+				<div class="point" style="left: {x}px; top: {y}px;" />
+			{/each}
+		</div>
 
 		<Button on:click={rollDice}>Бросить кубик</Button>
 	</div>
@@ -60,10 +96,19 @@
 		}
 	}
 	#map {
-		width: 2400px;
-		transform: translate(-700px, -700px);
+		transform: translate(-750px, -100px);
 		transform-origin: right top;
 		z-index: 10;
+	}
+	img {
+		width: 2400px;
+	}
+	.point {
+		position: absolute;
+		width: 30px;
+		height: 30px;
+		z-index: 300;
+		background-color: #000;
 	}
 	.dice {
 		position: absolute;
