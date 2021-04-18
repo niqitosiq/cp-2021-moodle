@@ -12,127 +12,267 @@
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
+		},
+		{
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
+		},
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 		{
 			preview: "/my/assets/case_trans.png",
 			rare: true,
+			description: "Кейс Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
 		{
-			preview: "/my/assets/case_trans.png",
-			rare: true,
+			preview: "/my/assets/stickers.png",
+			rare: false,
+			description: "Стикеры Samsung IT-School для VK",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
 		{
-			preview: "/my/assets/case_trans.png",
-			rare: true,
+			preview: "/my/assets/pen_trans.png",
+			rare: false,
+			description: "Ручку Samsung IT-School",
 		},
-		{ preview: "/my/assets/stickers.png", rare: false },
-		{ preview: "/my/assets/pen_trans.png", rare: false },
-		{ preview: "/my/assets/cup_trans.png", rare: false },
+		{
+			preview: "/my/assets/cup_trans.png",
+			rare: false,
+			description: "Кружку Samsung IT-School",
+		},
 	];
+
+	let activeItem;
+	$: activeItem = items[active];
 
 	function getRandomNumber(min, max) {
 		min = Math.ceil(min);
@@ -196,8 +336,8 @@
 
 	{#if winned}
 		<div class="description" transition:slide>
-			<h3>Поздравляю, вы выиграли Стикеры Samsung IT-School для VK</h3>
-			<p>Поздравляю, вы выиграли Толстовку из дизайнерской серии</p>
+			<h3>Поздравляю, вы выиграли {activeItem.description}</h3>
+			<p>Поздравляю, вы выиграли {activeItem.description}</p>
 		</div>
 	{/if}
 

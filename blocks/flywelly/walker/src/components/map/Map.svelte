@@ -48,13 +48,13 @@
 	}
 
 	const points = [
-		{ x: 394, y: 494, type: "start" },
-		{ x: 448, y: 557, type: "empty" },
-		{ x: 518, y: 597, type: "empty" },
-		{ x: 585, y: 637, type: "prize" },
-		{ x: 652, y: 677, type: "empty" },
-		{ x: 857, y: 790, type: "empty" },
-		{ x: 920, y: 820, type: "empty" },
+		{ x: 384, y: 464, type: "start" },
+		{ x: 438, y: 527, type: "empty" },
+		{ x: 508, y: 567, type: "empty" },
+		{ x: 575, y: 607, type: "prize" },
+		{ x: 642, y: 647, type: "empty" },
+		{ x: 847, y: 760, type: "empty" },
+		{ x: 910, y: 790, type: "empty" },
 	];
 
 	onMount(async () => {
@@ -117,7 +117,7 @@
 			<div id="user">
 				<div class="picture">
 					<img
-						src="https://2.bp.blogspot.com/-SYZeEKXWltA/W_F8zblq64I/AAAAAAAABec/c9L0mbjGgcYoFfnD6V1Zpd6gK-VhxzSWwCLcBGAs/w1200-h630-p-k-no-nu/rect1313.png"
+						src="https://otvet.imgsmail.ru/download/49056727_b4076d725aa34ac69a87e28b99218ad3_800.jpg"
 						alt=""
 					/>
 				</div>
@@ -175,17 +175,17 @@
 		align-items: center;
 	}
 	.picture {
-		width: 30px;
-		height: 30px;
-		border-radius: 30px;
+		width: 50px;
+		height: 50px;
+		border-radius: 50px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		position: relative;
 		background-color: #f55063;
 		img {
-			width: 70px;
-			height: 70px;
+			width: 40px;
+			height: 40px;
 			border-radius: 70px;
 			object-fit: cover;
 			position: relative;

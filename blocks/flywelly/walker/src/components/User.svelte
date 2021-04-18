@@ -5,7 +5,7 @@
 <div class="user">
 	<div class="picture">
 		<img
-			src="https://2.bp.blogspot.com/-SYZeEKXWltA/W_F8zblq64I/AAAAAAAABec/c9L0mbjGgcYoFfnD6V1Zpd6gK-VhxzSWwCLcBGAs/w1200-h630-p-k-no-nu/rect1313.png"
+			src="https://otvet.imgsmail.ru/download/49056727_b4076d725aa34ac69a87e28b99218ad3_800.jpg"
 			alt=""
 		/>
 	</div>
